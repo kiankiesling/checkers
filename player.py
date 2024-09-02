@@ -1,22 +1,17 @@
 class Player:
-
-    def __init__(self, id:str):
+    def __init__(self, id: str):
         self.id = id
         self.name = id
         self.inGame = False
-    
-    def getID(self):
+
+    def get_id(self):
         return self.id
 
-    def getName(self):
+    def get_name(self):
         return self.name
 
-    def getInGame(self):
+    def get_in_game(self):
         return self.inGame
-    
-    def changeName(self, newName):
+
+    def change_name(self, newName):
         self.name = newName
-
-
-
-        
