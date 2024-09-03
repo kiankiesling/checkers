@@ -8,3 +8,8 @@ class Tile:
 
     def get_piece(self):
         return self.piece
+
+    def pop_piece(self):
+        piece = self.piece
+        self.piece = None
+        return piece
