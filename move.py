@@ -21,3 +21,6 @@ class Move:
         self.end_coords = end_coords
         self.player = player
         self.player_is_white = is_white
+
+    def get_player_is_white(self):
+        return self.player_is_white

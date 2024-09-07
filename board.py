@@ -40,3 +40,13 @@ class Board:
     def set_piece_on_tile(self, coordinates: str, piece: Piece):
         tile = self.get_tile(coordinates)
         tile.set_piece(piece)
+
+    def get_tile_index(self, coordinates: str):
+        x = ord(coordinates[0].lower()) - 97
+        y = int(coordinates[1]) - 1
+        return y, x
+
+    def get_tile_by_index(self, y: int, x: int) -> Tile:
+        if x > 7 or x < 0 or y > 7 or y < 0:
+            raise Exception("Tile Out of Bounds")
+        return self.tiles[y][x]
