@@ -33,6 +33,8 @@ class Board:
     def get_tile(self, coordinates: str) -> Tile:
         x = ord(coordinates[0].lower()) - 97
         y = int(coordinates[1]) - 1
+        if x > 7 or x < 0 or y > 7 or y < 0:
+            raise Exception("Tile Out of Bounds")
         return self.tiles[y][x]
 
     def set_piece_on_tile(self, coordinates: str, piece: Piece):

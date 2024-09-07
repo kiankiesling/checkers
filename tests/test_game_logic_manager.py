@@ -21,16 +21,40 @@ def test_is_forward_move_illegal():
     assert not glm1.is_move_legal(b1, m1)
 
 
+def test_is_diagonal_backward_move_illegal():
+    b1 = Board()
+    glm1 = GameLogicManager()
+    p1 = Player("Pax")
+    b1.set_piece_on_tile("d2", None)
+    m1 = Move("e3", "d2", p1, True)
+    assert not glm1.is_move_legal(b1, m1)
+
+
+def test_is_out_of_bounds_move_illegal():
+    b1 = Board()
+    glm1 = GameLogicManager()
+    p1 = Player("Pax")
+    b1.set_piece_on_tile("b8", Piece(True))
+    try:
+        m1 = Move("b8", "a9", p1, True)
+
+    except Exception:
+        assert 1 == 1
+        return
+
+    assert 1 == 2
+
+
 def test_is_jump_move_legal():
     b1 = Board()
     glm1 = GameLogicManager()
-    p1 = Player()
+    p1 = Player("Pax")
     b1.set_piece_on_tile("b6", None)
     b1.set_piece_on_tile("b4", Piece(False))
-    m1 = Move("a3", "c5", p1)
-    m2 = Move("c3", "a5", p1)
-    assert glm1.is_move_legal(m1)
-    assert glm1.is_move_legal(m2)
+    m1 = Move("a3", "c5", p1, True)
+    m2 = Move("c3", "a5", p1, True)
+    assert glm1.is_move_legal(b1, m1)
+    assert glm1.is_move_legal(b1, m2)
 
 
 def test_is_non_jump_move_illegal():
