@@ -51,6 +51,8 @@ class GameLogicManager:
             print("false 3")
             return False
 
+        # TODO add black jump direction
+
         if x_dif == -2:
             y, x = board.get_tile_index(move.start_coords)
             x = x + 1
