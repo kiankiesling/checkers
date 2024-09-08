@@ -5,3 +5,6 @@ class Piece:
 
     def convert_to_king(self):
         self.is_pawn = False
+
+    def get_is_white(self):
+        return self.is_white

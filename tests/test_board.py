@@ -27,3 +27,11 @@ def test_initialize_board():
     assert b1.get_tile("b8").get_piece() is not None
     assert not b1.get_tile("b8").get_piece().is_white
     assert b1.get_tile("d1").get_piece() is None
+
+
+def test_get_tile_coords_by_index():
+    b1 = Board()
+    assert b1.get_tile_coords_by_index(0, 0) == "a1"
+    assert b1.get_tile_coords_by_index(5, 3) == "d6"
+    assert b1.get_tile_coords_by_index(6, 7) == "h7"
+    assert b1.get_tile_coords_by_index(4, 2) == "c5"

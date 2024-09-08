@@ -2,9 +2,7 @@ from player import Player
 
 
 class Move:
-    def __init__(
-        self, start_coords: str, end_coords: str, player: Player, is_white: bool
-    ):
+    def __init__(self, start_coords: str, end_coords: str, is_white: bool):
         x = ord(start_coords[0].lower()) - 97
         y = int(start_coords[1]) - 1
 
@@ -19,8 +17,14 @@ class Move:
 
         self.start_coords = start_coords
         self.end_coords = end_coords
-        self.player = player
         self.player_is_white = is_white
 
     def get_player_is_white(self):
         return self.player_is_white
+
+    def __eq__(self, move) -> bool:
+        return (
+            self.start_coords == move.start_coords
+            and self.end_coords == move.end_coords
+            and self.player_is_white == move.player_is_white
+        )

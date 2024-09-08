@@ -50,3 +50,12 @@ class Board:
         if x > 7 or x < 0 or y > 7 or y < 0:
             raise Exception("Tile Out of Bounds")
         return self.tiles[y][x]
+
+    def get_tile_coords_by_index(self, y: int, x: int) -> str:
+        y_coords = y + 1
+        x_coords = chr(x + 97)
+
+        return x_coords + str(y_coords)
+
+    def get_tiles(self):
+        return self.tiles

@@ -13,3 +13,6 @@ class Tile:
         piece = self.piece
         self.piece = None
         return piece
+
+    def get_is_white(self):
+        return self.is_white
