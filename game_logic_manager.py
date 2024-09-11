@@ -186,3 +186,69 @@ class GameLogicManager:
             if self.is_pawn_jump_move_legal(board, right_move):
                 possible_jump_moves_for_tile.add(right_move)
         return possible_jump_moves_for_tile
+
+    def is_game_over(self, board: Board, player_white_turn: bool):
+        all_moves: set[Move] = self.find_all_moves(board, player_white_turn)
+        if len(all_moves) == 0:
+            return True
+        return False
+
+    def find_all_moves(self, board: Board, player_white_turn: bool):
+        # TODO nur schwarze felder prüfen
+        all_moves: set[Move] = set()
+        tiles = board.get_tiles()
+        for y, row in enumerate(tiles):
+            for x, tile in enumerate(row):
+                piece = tile.get_piece()
+                if not tile.get_is_white() and piece is not None:
+                    if piece.get_is_white() == player_white_turn:
+                        all_moves_for_tile = set()
+                        all_moves_for_tile = all_moves_for_tile.union(
+                            self.get_possible_jump_moves_for_tile(board, tile, y, x)
+                        )
+                        all_moves_for_tile = all_moves_for_tile.union(
+                            self.get_possible_non_jump_moves_for_tile(board, tile, y, x)
+                        )
+                        if len(all_moves_for_tile) != 0:
+                            all_moves = all_moves.union(all_moves_for_tile)
+        print(all_moves)
+        return all_moves
+
+    def get_possible_non_jump_moves_for_tile(
+        self, board: Board, tile: Tile, y: int, x: int
+    ):
+        possible_non_jump_moves_for_tile = set()
+        player_is_white = tile.get_piece().get_is_white()
+        start_coords = Board.get_tile_coords_by_index(y, x)
+        print(start_coords)
+        if player_is_white:
+            target_index_left = [y + 1, x - 1]
+            target_index_right = [y + 1, x + 1]
+        if not player_is_white:
+            target_index_left = [y - 1, x - 1]
+            target_index_right = [y - 1, x + 1]
+        if not (
+            target_index_left[0] > 7
+            or target_index_left[0] < 0
+            or target_index_left[1] > 7
+            or target_index_left[1] < 0
+        ):
+            target_coords_left = Board.get_tile_coords_by_index(
+                target_index_left[0], target_index_left[1]
+            )
+            left_move = Move(start_coords, target_coords_left, player_is_white)
+            if self.is_pawn_move_legal(board, left_move):
+                possible_non_jump_moves_for_tile.add(left_move)
+        if not (
+            target_index_right[0] > 7
+            or target_index_right[0] < 0
+            or target_index_right[1] > 7
+            or target_index_right[1] < 0
+        ):
+            target_coords_right = Board.get_tile_coords_by_index(
+                target_index_right[0], target_index_right[1]
+            )
+            right_move = Move(start_coords, target_coords_right, player_is_white)
+            if self.is_pawn_move_legal(board, right_move):
+                possible_non_jump_moves_for_tile.add(right_move)
+        return possible_non_jump_moves_for_tile
