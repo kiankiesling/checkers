@@ -41,21 +41,21 @@ class Board:
         tile = self.get_tile(coordinates)
         tile.set_piece(piece)
 
-    def get_tile_index(self, coordinates: str):
-        x = ord(coordinates[0].lower()) - 97
-        y = int(coordinates[1]) - 1
-        return y, x
-
     def get_tile_by_index(self, y: int, x: int) -> Tile:
         if x > 7 or x < 0 or y > 7 or y < 0:
             raise Exception("Tile Out of Bounds")
         return self.tiles[y][x]
 
-    def get_tile_coords_by_index(self, y: int, x: int) -> str:
+    def get_tiles(self):
+        return self.tiles
+
+    def get_tile_coords_by_index(y: int, x: int) -> str:
         y_coords = y + 1
         x_coords = chr(x + 97)
 
         return x_coords + str(y_coords)
 
-    def get_tiles(self):
-        return self.tiles
+    def get_tile_index_by_coords(coordinates: str):
+        x = ord(coordinates[0].lower()) - 97
+        y = int(coordinates[1]) - 1
+        return y, x

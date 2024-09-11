@@ -30,8 +30,7 @@ def test_initialize_board():
 
 
 def test_get_tile_coords_by_index():
-    b1 = Board()
-    assert b1.get_tile_coords_by_index(0, 0) == "a1"
-    assert b1.get_tile_coords_by_index(5, 3) == "d6"
-    assert b1.get_tile_coords_by_index(6, 7) == "h7"
-    assert b1.get_tile_coords_by_index(4, 2) == "c5"
+    assert Board.get_tile_coords_by_index(0, 0) == "a1"
+    assert Board.get_tile_coords_by_index(5, 3) == "d6"
+    assert Board.get_tile_coords_by_index(6, 7) == "h7"
+    assert Board.get_tile_coords_by_index(4, 2) == "c5"
