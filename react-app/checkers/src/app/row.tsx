@@ -1,15 +1,11 @@
 import Tile from "./tile";
 
-export default function () {
-  let row = [
-    { isWhite: true },
-    { isWhite: false },
-    { isWhite: true },
-    { isWhite: false },
-    { isWhite: true },
-    { isWhite: false },
-    { isWhite: true },
-    { isWhite: false },
-  ];
-  return row.map((tile) => <Tile isWhite={tile.isWhite} />);
+export default function ({ row }) {
+  return (
+    <div className="flex">
+      {row.map((tile) => (
+        <Tile isWhite={tile.isWhite} pieceIsWhite={true} piece={"pawn"} />
+      ))}
+    </div>
+  );
 }

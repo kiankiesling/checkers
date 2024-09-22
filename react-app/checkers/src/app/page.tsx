@@ -1,10 +1,39 @@
-import Image from "next/image";
+"use client";
 import Board from "./board";
 
+import Status from "./status";
+import ButtonRow from "./buttonRow";
+import useBoard from "./useBoard";
+
 export default function Home() {
+  let { rows, setRows, status } = useBoard();
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <Board />
+    <div className="flex flex-col content-center items-center min-h-screen p-10   font-[family-name:var(--font-geist-sans)]">
+      <h1>Checkers</h1>
+      <Status
+        playerWhiteTurn={status.playerWhiteTurn}
+        whiteStonesRemoved={status.whiteStonesRemoved}
+        blackStonesRemoved={status.blackStonesRemoved}
+      />
+      <Board rows={rows} />
+      <ButtonRow
+        onSearch={() =>
+          setRows([
+            [
+              { isWhite: true },
+              { isWhite: false },
+              { isWhite: true },
+              { isWhite: false },
+              { isWhite: true },
+              { isWhite: false },
+              { isWhite: true },
+              { isWhite: false },
+            ],
+          ])
+        }
+        onStart={() => null}
+      />
     </div>
   );
 }
