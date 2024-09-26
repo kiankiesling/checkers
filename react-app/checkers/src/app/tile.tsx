@@ -12,7 +12,7 @@ export default function ({
   return (
     <div
       onClick={() => onClick(coordinate)}
-      className={color + " min-w-20 min-h-20 flex items-center justify-center"}
+      className={color + " min-w-24 min-h-24 flex items-center justify-center"}
     >
       <Piece pieceIsWhite={!isWhite} pieceIsPawn={true} />
     </div>
