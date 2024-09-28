@@ -4,8 +4,9 @@ import SearchBar from "./searchBar";
 export default function ({ onSearch, onStart }) {
   return (
     <div className="flex gap-0.5">
-      <SearchBar />
-      <BaseButton title={"Spiel Starten"} onClick={onStart}></BaseButton>
+      {/* <SearchBar onSearch={onSearch} /> */}
+      {/* <BaseButton title={"Spiel Starten"} onClick={onStart}></BaseButton> */}
+      <button onClick={onStart}>test</button>
     </div>
   );
 }

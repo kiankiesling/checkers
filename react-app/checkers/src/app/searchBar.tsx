@@ -1,7 +1,7 @@
 import { useState } from "react";
 import BaseButton from "./baseButton";
 
-export default function SearchBar() {
+export default function SearchBar({ onSearch }) {
   const [searchInput, setSearchInput] = useState("Search-Player");
 
   function handleInputChange(event) {
@@ -17,7 +17,7 @@ export default function SearchBar() {
         value={searchInput}
         onChange={handleInputChange}
       />
-      <BaseButton onClick={() => null} title={"Search"} />
+      <BaseButton onClick={onSearch} title={"Search"} />
     </div>
   );
 }

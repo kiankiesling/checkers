@@ -7,7 +7,12 @@ import useBoard from "./useBoard";
 import SearchBar from "./searchBar";
 
 export default function Home() {
-  let { rows, setRows, status } = useBoard();
+  let { rows, setRows, removePieceFromTile, addPieceToTile, makeMove, status } =
+    useBoard();
+
+  function handleOnSearch() {
+    addPieceToTile([4, 4], true, true);
+  }
 
   return (
     <div className="flex flex-col content-center items-center min-h-screen p-10   font-[family-name:var(--font-geist-sans)] gap-3">
@@ -18,23 +23,7 @@ export default function Home() {
         blackStonesRemoved={status.blackStonesRemoved}
       />
       <Board rows={rows} />
-      <ButtonRow
-        onSearch={() =>
-          setRows([
-            [
-              { isWhite: true },
-              { isWhite: false },
-              { isWhite: true },
-              { isWhite: false },
-              { isWhite: true },
-              { isWhite: false },
-              { isWhite: true },
-              { isWhite: false },
-            ],
-          ])
-        }
-        onStart={() => null}
-      />
+      <ButtonRow onSearch={() => handleOnSearch()} onStart={handleOnSearch} />
     </div>
   );
 }
