@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Tile from "./tile";
 
-export default function ({ row, onClick, xindex }) {
+export default function ({ row, onClick, rowIndex, onTileClick }) {
   const [target, setTarget] = useState();
   function handleClick(event) {
     console.log(event.target);
@@ -10,12 +10,17 @@ export default function ({ row, onClick, xindex }) {
 
   return (
     <div className="flex">
-      {row.map((tile, yindex) => (
+      {row.map((tile, index) => (
         <Tile
-          coords={row.xindex + " " + yindex}
+          key={index}
+          onTileClick={onTileClick}
+          tileIndex={[rowIndex, index]}
           isWhite={tile.isWhite}
-          piece={tile.piece}
+          pieceIsWhite={tile.piece.isWhite}
+          pieceIsPawn={tile.piece.isPawn}
+          tileHasPiece={tile.hasPiece}
           onClick={(event) => handleClick()}
+          isSelected={tile.isSelected}
         />
       ))}
     </div>
