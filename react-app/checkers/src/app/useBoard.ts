@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-export default function () {
+export default function useBoard() {
   const whiteTile = {
     isWhite: true,
     hasPiece: false,
@@ -19,19 +19,19 @@ export default function () {
         hasPiece: true,
         piece: { isWhite: true, isPawn: true },
       },
-      whiteTile,
+      { ...whiteTile },
       {
         isWhite: false,
         hasPiece: true,
         piece: { isWhite: true, isPawn: true },
       },
-      whiteTile,
+      { ...whiteTile },
       {
         isWhite: false,
         hasPiece: true,
         piece: { isWhite: true, isPawn: true },
       },
-      whiteTile,
+      { ...whiteTile },
     ],
     [
       whiteTile,
@@ -40,19 +40,19 @@ export default function () {
         hasPiece: true,
         piece: { isWhite: true, isPawn: true },
       },
-      whiteTile,
+      { ...whiteTile },
       {
         isWhite: false,
         hasPiece: true,
         piece: { isWhite: true, isPawn: true },
       },
-      whiteTile,
+      { ...whiteTile },
       {
         isWhite: false,
         hasPiece: true,
         piece: { isWhite: true, isPawn: true },
       },
-      whiteTile,
+      { ...whiteTile },
       {
         isWhite: false,
         hasPiece: true,
@@ -65,150 +65,150 @@ export default function () {
         hasPiece: true,
         piece: { isWhite: true, isPawn: true },
       },
-      whiteTile,
+      { ...whiteTile },
       {
         isWhite: false,
         hasPiece: true,
         piece: { isWhite: true, isPawn: true },
       },
-      whiteTile,
+      { ...whiteTile },
       {
         isWhite: false,
         hasPiece: true,
         piece: { isWhite: true, isPawn: true },
       },
-      whiteTile,
+      { ...whiteTile },
       {
         isWhite: false,
         hasPiece: true,
         piece: { isWhite: true, isPawn: true },
       },
-      whiteTile,
+      { ...whiteTile },
     ],
     [
-      whiteTile,
+      { ...whiteTile },
       {
         isWhite: false,
         hasPiece: false,
         piece: { isWhite: null, isPawn: null },
       },
-      whiteTile,
+      { ...whiteTile },
       {
         isWhite: false,
         hasPiece: false,
         piece: { isWhite: null, isPawn: null },
       },
-      whiteTile,
+      { ...whiteTile },
       {
         isWhite: false,
         hasPiece: false,
         piece: { isWhite: null, isPawn: null },
       },
-      whiteTile,
+      { ...whiteTile },
       {
         isWhite: false,
         hasPiece: false,
         piece: { isWhite: null, isPawn: null },
-      },
-    ],
-    [
-      {
-        isWhite: false,
-        hasPiece: false,
-        piece: { isWhite: null, isPawn: null },
-      },
-      whiteTile,
-      {
-        isWhite: false,
-        hasPiece: false,
-        piece: { isWhite: null, isPawn: null },
-      },
-      whiteTile,
-      {
-        isWhite: false,
-        hasPiece: false,
-        piece: { isWhite: null, isPawn: null },
-      },
-      whiteTile,
-      {
-        isWhite: false,
-        hasPiece: false,
-        piece: { isWhite: null, isPawn: null },
-      },
-      whiteTile,
-    ],
-    [
-      whiteTile,
-      {
-        isWhite: false,
-        hasPiece: true,
-        piece: { isWhite: false, isPawn: true },
-      },
-      whiteTile,
-      {
-        isWhite: false,
-        hasPiece: true,
-        piece: { isWhite: false, isPawn: true },
-      },
-      whiteTile,
-      {
-        isWhite: false,
-        hasPiece: true,
-        piece: { isWhite: false, isPawn: true },
-      },
-      whiteTile,
-      {
-        isWhite: false,
-        hasPiece: true,
-        piece: { isWhite: false, isPawn: true },
       },
     ],
     [
       {
         isWhite: false,
-        hasPiece: true,
-        piece: { isWhite: false, isPawn: true },
+        hasPiece: false,
+        piece: { isWhite: null, isPawn: null },
       },
-      whiteTile,
+      { ...whiteTile },
       {
         isWhite: false,
-        hasPiece: true,
-        piece: { isWhite: false, isPawn: true },
+        hasPiece: false,
+        piece: { isWhite: null, isPawn: null },
       },
-      whiteTile,
+      { ...whiteTile },
       {
         isWhite: false,
-        hasPiece: true,
-        piece: { isWhite: false, isPawn: true },
+        hasPiece: false,
+        piece: { isWhite: null, isPawn: null },
       },
-      whiteTile,
+      { ...whiteTile },
       {
         isWhite: false,
-        hasPiece: true,
-        piece: { isWhite: false, isPawn: true },
+        hasPiece: false,
+        piece: { isWhite: null, isPawn: null },
       },
-      whiteTile,
+      { ...whiteTile },
     ],
     [
-      whiteTile,
+      { ...whiteTile },
       {
         isWhite: false,
         hasPiece: true,
         piece: { isWhite: false, isPawn: true },
       },
-      whiteTile,
+      { ...whiteTile },
       {
         isWhite: false,
         hasPiece: true,
         piece: { isWhite: false, isPawn: true },
       },
-      whiteTile,
+      { ...whiteTile },
       {
         isWhite: false,
         hasPiece: true,
         piece: { isWhite: false, isPawn: true },
       },
-      whiteTile,
+      { ...whiteTile },
+      {
+        isWhite: false,
+        hasPiece: true,
+        piece: { isWhite: false, isPawn: true },
+      },
+    ],
+    [
+      {
+        isWhite: false,
+        hasPiece: true,
+        piece: { isWhite: false, isPawn: true },
+      },
+      { ...whiteTile },
+      {
+        isWhite: false,
+        hasPiece: true,
+        piece: { isWhite: false, isPawn: true },
+      },
+      { ...whiteTile },
+      {
+        isWhite: false,
+        hasPiece: true,
+        piece: { isWhite: false, isPawn: true },
+      },
+      { ...whiteTile },
+      {
+        isWhite: false,
+        hasPiece: true,
+        piece: { isWhite: false, isPawn: true },
+      },
+      { ...whiteTile },
+    ],
+    [
+      { ...whiteTile },
+      {
+        isWhite: false,
+        hasPiece: true,
+        piece: { isWhite: false, isPawn: true },
+      },
+      { ...whiteTile },
+      {
+        isWhite: false,
+        hasPiece: true,
+        piece: { isWhite: false, isPawn: true },
+      },
+      { ...whiteTile },
+      {
+        isWhite: false,
+        hasPiece: true,
+        piece: { isWhite: false, isPawn: true },
+      },
+      { ...whiteTile },
       {
         isWhite: false,
         hasPiece: true,
@@ -217,10 +217,10 @@ export default function () {
     ],
   ]);
 
-  let [playerWhiteTurn, setPlayerWhiteTurn] = useState(true);
-  let [whiteStonesRemoved, setWhiteStonesRemoved] = useState(2);
-  let [blackStonesRemoved, setBlackStonesRemoved] = useState(10);
-  let [currentMove, setCurrentMove] = useState({
+  const [playerWhiteTurn, setPlayerWhiteTurn] = useState(true);
+  const [whiteStonesRemoved, setWhiteStonesRemoved] = useState(2);
+  const [blackStonesRemoved, setBlackStonesRemoved] = useState(10);
+  const [currentMove, setCurrentMove] = useState({
     startIndex: null,
     endIndex: null,
   });
@@ -229,8 +229,8 @@ export default function () {
     setRows((rows) => {
       const newRows = [...rows];
 
-      for (let rowIndex in rows) {
-        for (let tileIndex in rows[rowIndex]) {
+      for (const rowIndex in rows) {
+        for (const tileIndex in rows[rowIndex]) {
           newRows[rowIndex][tileIndex].isSelected = false;
         }
       }
@@ -241,27 +241,25 @@ export default function () {
         ].isSelected = true;
       }
 
-      if (currentMove.endIndex != null) {
-        newRows[currentMove.endIndex[0]][currentMove.endIndex[1]].isSelected =
-          true;
+      if (currentMove.endIndex != null && currentMove.startIndex != null) {
+        makeMove();
       }
 
       return newRows;
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentMove]);
 
   function onTileClick(tileIndex, tileHasPiece) {
-    if (currentMove.startIndex == null) {
+    if (currentMove.startIndex == null && tileHasPiece) {
       setCurrentMove({ startIndex: tileIndex, endIndex: null });
       console.log("1, ", currentMove);
-    } else if (!tileHasPiece) {
+    } else {
       setCurrentMove((oldCurrentMove) => {
         const newCurrentMove = { ...oldCurrentMove };
         newCurrentMove.endIndex = tileIndex;
         return newCurrentMove;
       });
-    } else {
-      setCurrentMove({ startIndex: tileIndex, endIndex: null });
     }
     console.log("2, ", currentMove);
   }
@@ -270,52 +268,58 @@ export default function () {
     console.log("schlaffo");
   }, [rows]);
 
-  const removePieceFromTile = useCallback(function (index) {
-    console.log("remove piece", rows);
-    setRows((oldRows) => {
-      const newRows = [...oldRows];
-      newRows[index[0]][index[1]].hasPiece = false;
+  const removePieceFromTile = useCallback(
+    function (index) {
+      console.log("remove piece", index);
+      setRows((oldRows) => {
+        const newRows = [...oldRows];
+        newRows[index[0]][index[1]].hasPiece = false;
 
-      return newRows;
-    });
-  }, []);
+        return newRows;
+      });
+    },
+    [setRows]
+  );
 
-  const addPieceToTile = useCallback(function (index, isWhite, isPawn) {
-    setRows((oldRows) => {
-      const newRows = [...oldRows];
-      newRows[index[0]][index[1]].hasPiece = true;
-      newRows[index[0]][index[1]].piece.isWhite = true;
-      newRows[index[0]][index[1]].piece.isPawn = true;
-      return newRows;
-    });
-  }, []);
+  const addPieceToTile = useCallback(
+    function (index, isWhite, isPawn) {
+      setRows((oldRows) => {
+        const newRows = [...oldRows];
+        newRows[index[0]][index[1]].hasPiece = true;
+        newRows[index[0]][index[1]].piece.isWhite = isWhite;
+        newRows[index[0]][index[1]].piece.isPawn = isPawn;
+        return newRows;
+      });
+    },
+    [setRows]
+  );
   // function addPieceToTile(index, isWhite, isPawn) {
   //   rows[index[0]][index[1]].piece.isWhite = isWhite;
   //   rows[index[0]][index[1]].piece.isPawn = isPawn;
   // }
 
-  const makeMove = useCallback(function (
-    startIndex,
-    endIndex,
-    pieceIsWhite,
-    pieceIsPawn
-  ) {
-    removePieceFromTile(startIndex);
-    addPieceToTile(endIndex, pieceIsWhite, pieceIsPawn);
-  },
-  []);
+  const makeMove = useCallback(
+    function () {
+      const startIndex = currentMove.startIndex;
+      const endIndex = currentMove.endIndex;
+      const pieceIsWhite = playerWhiteTurn;
+      const pieceIsPawn = true;
+      // console.log(startIndex, "jojo", test);
+      removePieceFromTile(startIndex);
+      addPieceToTile(endIndex, pieceIsWhite, pieceIsPawn);
+      setCurrentMove({ startIndex: null, endIndex: null });
+    },
+    [currentMove, playerWhiteTurn, removePieceFromTile, addPieceToTile]
+  );
 
-  function isMoveLegal(startIndex, endIndex) {
-    if (rows[startIndex[0]][startIndex[1]].hasPiece)
-      rows[startIndex[0]][startIndex[1]].piece.isWhite;
-  }
+  // function isMoveLegal(startIndex, endIndex) {
+  //   if (rows[startIndex[0]][startIndex[1]].hasPiece)
+  //     rows[startIndex[0]][startIndex[1]].piece.isWhite;
+  // }
 
   return {
     rows,
     setRows,
-    removePieceFromTile,
-    addPieceToTile,
-    makeMove,
     onTileClick,
     // initializeBoard,
     status: { playerWhiteTurn, whiteStonesRemoved, blackStonesRemoved },
