@@ -22,7 +22,7 @@ export default function ({
   if (tileHasPiece) {
     return (
       <div
-        onClick={() => onTileClick(tileIndex)}
+        onClick={() => onTileClick(tileIndex, tileHasPiece)}
         className={
           color + " min-w-24 min-h-24 flex items-center justify-center"
         }
@@ -35,7 +35,7 @@ export default function ({
 
   return (
     <div
-      onClick={() => onTileClick(tileIndex)}
+      onClick={() => onTileClick(tileIndex, tileHasPiece)}
       className={color + " min-w-24 min-h-24 flex items-center justify-center"}
     >
       {/* {index} */}

@@ -229,34 +229,41 @@ export default function () {
     setRows((rows) => {
       const newRows = [...rows];
 
-      if (!currentMove.startIndex) {
-        for (let rowIndex in rows) {
-          for (let tileIndex in rows[rowIndex]) {
-            newRows[rowIndex][tileIndex].isSelected = false;
-          }
+      for (let rowIndex in rows) {
+        for (let tileIndex in rows[rowIndex]) {
+          newRows[rowIndex][tileIndex].isSelected = false;
         }
-      } else {
+      }
+
+      if (currentMove.startIndex != null) {
         newRows[currentMove.startIndex[0]][
           currentMove.startIndex[1]
         ].isSelected = true;
       }
 
+      if (currentMove.endIndex != null) {
+        newRows[currentMove.endIndex[0]][currentMove.endIndex[1]].isSelected =
+          true;
+      }
+
       return newRows;
     });
-  }, [currentMove.startIndex, setRows]);
+  }, [currentMove]);
 
-  function onTileClick(tileIndex) {
+  function onTileClick(tileIndex, tileHasPiece) {
     if (currentMove.startIndex == null) {
       setCurrentMove({ startIndex: tileIndex, endIndex: null });
       console.log("1, ", currentMove);
-    } else {
+    } else if (!tileHasPiece) {
       setCurrentMove((oldCurrentMove) => {
         const newCurrentMove = { ...oldCurrentMove };
         newCurrentMove.endIndex = tileIndex;
-        console.log("2, ", currentMove);
         return newCurrentMove;
       });
+    } else {
+      setCurrentMove({ startIndex: tileIndex, endIndex: null });
     }
+    console.log("2, ", currentMove);
   }
 
   useEffect(() => {
