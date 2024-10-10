@@ -1,5 +1,6 @@
 import { useState } from "react";
 import BaseButton from "./baseButton";
+import React from "react";
 
 export default function SearchBar({ onSearch }) {
   const [searchInput, setSearchInput] = useState("Search-Player");

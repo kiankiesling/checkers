@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import Row from "./row";
 import Tile from "./tile";
+import React from "react";
 
-export default function ({ rows, onTileClick }) {
+export default function Board({ rows, onTileClick }) {
   //TODO
   useEffect(() => {
     console.log("new rows", rows);

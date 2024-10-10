@@ -1,5 +1,6 @@
 "use client";
 import Board from "./board";
+import React from "react";
 
 import Status from "./status";
 import ButtonRow from "./buttonRow";
@@ -26,7 +27,7 @@ export default function Home() {
       console.log("page ", rows);
       // initializeBoard();
       console.log("handle on search!");
-      makeMove([2, 0], [3, 3], true, true);
+      makeMove([2, 0], [3, 3], true, true, true);
     },
     [addPieceToTile]
   );

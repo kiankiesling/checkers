@@ -232,16 +232,38 @@ export default function useBoard() {
       for (const rowIndex in rows) {
         for (const tileIndex in rows[rowIndex]) {
           newRows[rowIndex][tileIndex].isSelected = false;
+          newRows[rowIndex][tileIndex].isHighlighted = false;
         }
       }
 
-      if (currentMove.startIndex != null) {
+      if (currentMove.startIndex != null && playerWhiteTurn) {
         newRows[currentMove.startIndex[0]][
           currentMove.startIndex[1]
         ].isSelected = true;
+        newRows[currentMove.startIndex[0] + 1][
+          currentMove.startIndex[1] + 1
+        ].isHighlighted = true;
+        newRows[currentMove.startIndex[0] + 1][
+          currentMove.startIndex[1] - 1
+        ].isHighlighted = true;
+      }
+      if (currentMove.startIndex != null && !playerWhiteTurn) {
+        newRows[currentMove.startIndex[0]][
+          currentMove.startIndex[1]
+        ].isSelected = true;
+        newRows[currentMove.startIndex[0] - 1][
+          currentMove.startIndex[1] + 1
+        ].isHighlighted = true;
+        newRows[currentMove.startIndex[0] - 1][
+          currentMove.startIndex[1] - 1
+        ].isHighlighted = true;
       }
 
-      if (currentMove.endIndex != null && currentMove.startIndex != null) {
+      if (
+        currentMove.endIndex != null &&
+        currentMove.startIndex != null &&
+        isMoveLegal()
+      ) {
         makeMove();
       }
 
@@ -250,8 +272,12 @@ export default function useBoard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentMove]);
 
-  function onTileClick(tileIndex, tileHasPiece) {
-    if (currentMove.startIndex == null && tileHasPiece) {
+  function onTileClick(tileIndex, tileHasPiece, pieceIsWhite) {
+    if (
+      currentMove.startIndex == null &&
+      tileHasPiece &&
+      playerWhiteTurn == pieceIsWhite
+    ) {
       setCurrentMove({ startIndex: tileIndex, endIndex: null });
       console.log("1, ", currentMove);
     } else {
@@ -307,15 +333,42 @@ export default function useBoard() {
       // console.log(startIndex, "jojo", test);
       removePieceFromTile(startIndex);
       addPieceToTile(endIndex, pieceIsWhite, pieceIsPawn);
+      setPlayerWhiteTurn(!playerWhiteTurn);
       setCurrentMove({ startIndex: null, endIndex: null });
     },
     [currentMove, playerWhiteTurn, removePieceFromTile, addPieceToTile]
   );
 
-  // function isMoveLegal(startIndex, endIndex) {
-  //   if (rows[startIndex[0]][startIndex[1]].hasPiece)
-  //     rows[startIndex[0]][startIndex[1]].piece.isWhite;
-  // }
+  function isMoveLegal() {
+    const startIndex = currentMove.startIndex;
+    const endIndex = currentMove.endIndex;
+    const yDif = endIndex[0] - startIndex[0];
+    const xDif = endIndex[1] - startIndex[1];
+
+    if (
+      rows[startIndex[0]][startIndex[1]].hasPiece &&
+      !rows[endIndex[0]][endIndex[1]].hasPiece &&
+      isYDifLegal(yDif) &&
+      isXDifLegal(xDif)
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  function isYDifLegal(yDif) {
+    if (playerWhiteTurn && yDif == 1) {
+      return true;
+    }
+    if (!playerWhiteTurn && yDif == -1) {
+      return true;
+    }
+  }
+  function isXDifLegal(xDif) {
+    if (xDif == 1 || xDif == -1) {
+      return true;
+    }
+  }
 
   return {
     rows,

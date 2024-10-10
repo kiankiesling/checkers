@@ -1,7 +1,8 @@
 import { useState } from "react";
 import Tile from "./tile";
+import React from "react";
 
-export default function ({ row, onClick, rowIndex, onTileClick }) {
+export default function Row({ row, onClick, rowIndex, onTileClick }) {
   const [target, setTarget] = useState();
   function handleClick(event) {
     console.log(event.target);
@@ -21,6 +22,7 @@ export default function ({ row, onClick, rowIndex, onTileClick }) {
           tileHasPiece={tile.hasPiece}
           onClick={(event) => handleClick()}
           isSelected={tile.isSelected}
+          isHighlighted={tile.isHighlighted}
         />
       ))}
     </div>
