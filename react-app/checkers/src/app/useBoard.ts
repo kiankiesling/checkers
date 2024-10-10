@@ -364,8 +364,21 @@ export default function useBoard() {
       return true;
     }
   }
+  function isYJumpDifLegal(yDif) {
+    if (playerWhiteTurn && yDif == 2) {
+      return true;
+    }
+    if (!playerWhiteTurn && yDif == -2) {
+      return true;
+    }
+  }
   function isXDifLegal(xDif) {
     if (xDif == 1 || xDif == -1) {
+      return true;
+    }
+  }
+  function isXJumpDifLegal(xDif) {
+    if (xDif == 2 || xDif == -2) {
       return true;
     }
   }
