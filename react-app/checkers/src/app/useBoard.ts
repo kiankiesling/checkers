@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { calcMoves } from "./utils/calcMoves";
 
 export default function useBoard() {
   const whiteTile = {
@@ -241,32 +242,37 @@ export default function useBoard() {
           currentMove.startIndex[1]
         ].isSelected = true;
 
-        //TODO out of bounds verhindern, abhängig von anderen pieces machen
-        if (isTileIndexInBounds(currentMove.startIndex[0] + 1, currentMove.startIndex[1] + 1)) {
-          newRows[currentMove.startIndex[0] + 1][
-            currentMove.startIndex[1] + 1
-          ].isHighlighted = true;
-        }
-        if (isTileIndexInBounds(currentMove.startIndex[0] + 1, currentMove.startIndex[1] - 1)) {
-          newRows[currentMove.startIndex[0] + 1][
-            currentMove.startIndex[1] - 1
-          ].isHighlighted = true;
-        }
+        highlightPossibleMoves(currentMove.startIndex, true, newRows)
+
+        //TODO abhängig von anderen pieces machen
+        // if (isTileIndexInBounds(currentMove.startIndex[0] + 1, currentMove.startIndex[1] + 1)) {
+        //   newRows[currentMove.startIndex[0] + 1][
+        //     currentMove.startIndex[1] + 1
+        //   ].isHighlighted = true;
+        // }
+        // if (isTileIndexInBounds(currentMove.startIndex[0] + 1, currentMove.startIndex[1] - 1)) {
+        //   newRows[currentMove.startIndex[0] + 1][
+        //     currentMove.startIndex[1] - 1
+        //   ].isHighlighted = true;
+        // }
       }
       if (currentMove.startIndex != null && !playerWhiteTurn) {
         newRows[currentMove.startIndex[0]][
           currentMove.startIndex[1]
         ].isSelected = true;
-        if (isTileIndexInBounds(currentMove.startIndex[0] - 1, currentMove.startIndex[1] + 1)) {
-          newRows[currentMove.startIndex[0] - 1][
-            currentMove.startIndex[1] + 1
-          ].isHighlighted = true;
-        }
-        if (isTileIndexInBounds(currentMove.startIndex[0] - 1, currentMove.startIndex[1] - 1)) {
-          newRows[currentMove.startIndex[0] - 1][
-            currentMove.startIndex[1] - 1
-          ].isHighlighted = true;
-        }
+
+        highlightPossibleMoves(currentMove.startIndex, false, newRows)
+
+        // if (isTileIndexInBounds(currentMove.startIndex[0] - 1, currentMove.startIndex[1] + 1)) {
+        //   newRows[currentMove.startIndex[0] - 1][
+        //     currentMove.startIndex[1] + 1
+        //   ].isHighlighted = true;
+        // }
+        // if (isTileIndexInBounds(currentMove.startIndex[0] - 1, currentMove.startIndex[1] - 1)) {
+        //   newRows[currentMove.startIndex[0] - 1][
+        //     currentMove.startIndex[1] - 1
+        //   ].isHighlighted = true;
+        // }
       }
 
       if (
@@ -365,6 +371,54 @@ export default function useBoard() {
       return true;
     }
     return false;
+  }
+  // ausgelagerter Check für useEffect abhängig von currentMove
+  function highlightPossibleMoves(startIndex, playerWhiteTurn, rows) {
+    if(playerWhiteTurn) {
+      if (isTileIndexInBounds(startIndex[0] + 1, startIndex[1] + 1) && !rows[startIndex[0] + 1][startIndex[1] + 1].hasPiece) {
+        rows[startIndex[0] + 1][
+          startIndex[1] + 1
+        ].isHighlighted = true;
+      }
+      else if(isTileIndexInBounds(startIndex[0] + 2, startIndex[1] + 2) && !rows[startIndex[0] + 2][startIndex[1] + 2].hasPiece) {
+        rows[startIndex[0] + 2][
+          startIndex[1] + 2
+        ].isHighlighted = true;
+      }
+      if (isTileIndexInBounds(startIndex[0] + 1, startIndex[1] - 1) && !rows[startIndex[0] + 1][startIndex[1] - 1].hasPiece) {
+        rows[startIndex[0] + 1][
+          startIndex[1] - 1
+        ].isHighlighted = true;
+      }
+      else if(isTileIndexInBounds(startIndex[0] + 2, startIndex[1] - 2) && !rows[startIndex[0] + 2][startIndex[1] - 2].hasPiece) {
+        rows[startIndex[0] + 2][
+          startIndex[1] - 2
+        ].isHighlighted = true;
+      }
+    }
+    if(!playerWhiteTurn) {
+      if (isTileIndexInBounds(startIndex[0] - 1, startIndex[1] + 1) && !rows[startIndex[0] - 1][startIndex[1] + 1].hasPiece) {
+        rows[startIndex[0] - 1][
+          startIndex[1] + 1
+        ].isHighlighted = true;
+      }
+      else if(isTileIndexInBounds(startIndex[0] - 2, startIndex[1] + 2) && !rows[startIndex[0] - 2][startIndex[1] + 2].hasPiece) {
+        rows[startIndex[0] - 2][
+          startIndex[1] + 2
+        ].isHighlighted = true;
+      }
+      if (isTileIndexInBounds(startIndex[0] - 1, startIndex[1] - 1) && !rows[startIndex[0] - 1][startIndex[1] - 1].hasPiece) {
+        rows[startIndex[0] - 1][
+          startIndex[1] - 1
+        ].isHighlighted = true;
+      }
+      else if(isTileIndexInBounds(startIndex[0] - 2, startIndex[1] - 2) && !rows[startIndex[0] - 2][startIndex[1] - 2].hasPiece) {
+        rows[startIndex[0] - 2][
+          startIndex[1] - 2
+        ].isHighlighted = true;
+      }
+    }
+
   }
 
   function isTileIndexInBounds(rowIndex, tileIndex) {
