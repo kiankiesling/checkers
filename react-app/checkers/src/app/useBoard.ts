@@ -240,23 +240,33 @@ export default function useBoard() {
         newRows[currentMove.startIndex[0]][
           currentMove.startIndex[1]
         ].isSelected = true;
-        newRows[currentMove.startIndex[0] + 1][
-          currentMove.startIndex[1] + 1
-        ].isHighlighted = true;
-        newRows[currentMove.startIndex[0] + 1][
-          currentMove.startIndex[1] - 1
-        ].isHighlighted = true;
+
+        //TODO out of bounds verhindern, abhängig von anderen pieces machen
+        if (isTileIndexInBounds(currentMove.startIndex[0] + 1, currentMove.startIndex[1] + 1)) {
+          newRows[currentMove.startIndex[0] + 1][
+            currentMove.startIndex[1] + 1
+          ].isHighlighted = true;
+        }
+        if (isTileIndexInBounds(currentMove.startIndex[0] + 1, currentMove.startIndex[1] - 1)) {
+          newRows[currentMove.startIndex[0] + 1][
+            currentMove.startIndex[1] - 1
+          ].isHighlighted = true;
+        }
       }
       if (currentMove.startIndex != null && !playerWhiteTurn) {
         newRows[currentMove.startIndex[0]][
           currentMove.startIndex[1]
         ].isSelected = true;
-        newRows[currentMove.startIndex[0] - 1][
-          currentMove.startIndex[1] + 1
-        ].isHighlighted = true;
-        newRows[currentMove.startIndex[0] - 1][
-          currentMove.startIndex[1] - 1
-        ].isHighlighted = true;
+        if (isTileIndexInBounds(currentMove.startIndex[0] - 1, currentMove.startIndex[1] + 1)) {
+          newRows[currentMove.startIndex[0] - 1][
+            currentMove.startIndex[1] + 1
+          ].isHighlighted = true;
+        }
+        if (isTileIndexInBounds(currentMove.startIndex[0] - 1, currentMove.startIndex[1] - 1)) {
+          newRows[currentMove.startIndex[0] - 1][
+            currentMove.startIndex[1] - 1
+          ].isHighlighted = true;
+        }
       }
 
       if (
@@ -309,7 +319,8 @@ export default function useBoard() {
 
   const addPieceToTile = useCallback(
     function (index, isWhite, isPawn) {
-      setRows((oldRows) => {
+      setRows(
+        (oldRows) => {
         const newRows = [...oldRows];
         newRows[index[0]][index[1]].hasPiece = true;
         newRows[index[0]][index[1]].piece.isWhite = isWhite;
@@ -317,7 +328,7 @@ export default function useBoard() {
         return newRows;
       });
     },
-    [setRows]
+    []
   );
   // function addPieceToTile(index, isWhite, isPawn) {
   //   rows[index[0]][index[1]].piece.isWhite = isWhite;
@@ -354,6 +365,10 @@ export default function useBoard() {
       return true;
     }
     return false;
+  }
+
+  function isTileIndexInBounds(rowIndex, tileIndex) {
+    return (rowIndex < 8 && tileIndex < 8 && rowIndex >= 0 && tileIndex >= 0);
   }
 
   function isYDifLegal(yDif) {
