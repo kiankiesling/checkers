@@ -288,15 +288,18 @@ export default function useBoard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentMove]);
 
+
+  //TODO Tiles abwählbar machen (endindex wird auch belegt wenn er es nicht soll)
   function onTileClick(tileIndex, tileHasPiece, pieceIsWhite) {
     if (
-      currentMove.startIndex == null &&
+      // currentMove.startIndex == null &&
       tileHasPiece &&
       playerWhiteTurn == pieceIsWhite
     ) {
       setCurrentMove({ startIndex: tileIndex, endIndex: null });
       console.log("1, ", currentMove);
-    } else {
+    }
+    else {
       setCurrentMove((oldCurrentMove) => {
         const newCurrentMove = { ...oldCurrentMove };
         newCurrentMove.endIndex = tileIndex;
