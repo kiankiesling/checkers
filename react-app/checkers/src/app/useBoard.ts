@@ -327,12 +327,12 @@ export default function useBoard() {
     function (index, isWhite, isPawn) {
       setRows(
         (oldRows) => {
-        const newRows = [...oldRows];
-        newRows[index[0]][index[1]].hasPiece = true;
-        newRows[index[0]][index[1]].piece.isWhite = isWhite;
-        newRows[index[0]][index[1]].piece.isPawn = isPawn;
-        return newRows;
-      });
+          const newRows = [...oldRows];
+          newRows[index[0]][index[1]].hasPiece = true;
+          newRows[index[0]][index[1]].piece.isWhite = isWhite;
+          newRows[index[0]][index[1]].piece.isPawn = isPawn;
+          return newRows;
+        });
     },
     []
   );
@@ -362,25 +362,65 @@ export default function useBoard() {
     const yDif = endIndex[0] - startIndex[0];
     const xDif = endIndex[1] - startIndex[1];
 
+
+    //standard move
+
     if (
       rows[startIndex[0]][startIndex[1]].hasPiece &&
       !rows[endIndex[0]][endIndex[1]].hasPiece &&
       isYDifLegal(yDif) &&
-      isXDifLegal(xDif)
+      isXDifLegal(xDif)) {
+      return true;
+    }
+
+    //jump move weiß
+    else if (playerWhiteTurn && rows[startIndex[0]][startIndex[1]].hasPiece &&
+      !rows[endIndex[0]][endIndex[1]].hasPiece && isYJumpDifLegal(yDif) && isXJumpDifLegal(xDif)) {
+      if (xDif == 2 && rows[startIndex[0] + 1][startIndex[1] + 1].hasPiece && !rows[startIndex[0] + 1][startIndex[1] + 1].piece.isWhite)
+        return true
+      if (xDif == -2 && rows[startIndex[0] + 1][startIndex[1] - 1].hasPiece && !rows[startIndex[0] + 1][startIndex[1] - 1].piece.isWhite) {
+        return true
+      }
+    }
+    //jump move schwarz
+    else if (!playerWhiteTurn && rows[startIndex[0]][startIndex[1]].hasPiece &&
+      !rows[endIndex[0]][endIndex[1]].hasPiece && isYJumpDifLegal(yDif) && isXJumpDifLegal(xDif)) {
+      if (xDif == 2 && rows[startIndex[0] - 1][startIndex[1] + 1].hasPiece && rows[startIndex[0] - 1][startIndex[1] + 1].piece.isWhite)
+        return true
+      if (xDif == -2 && rows[startIndex[0] - 1][startIndex[1] - 1].hasPiece && rows[startIndex[0] - 1][startIndex[1] - 1].piece.isWhite) {
+        return true
+      }
+    }
+
+    return false;
+  }
+
+  function isJumpMoveLegal() {
+    const startIndex = currentMove.startIndex;
+    const endIndex = currentMove.endIndex;
+    const yDif = endIndex[0] - startIndex[0];
+    const xDif = endIndex[1] - startIndex[1];
+
+    if (
+      rows[startIndex[0]][startIndex[1]].hasPiece &&
+      !rows[endIndex[0]][endIndex[1]].hasPiece &&
+      isYJumpDifLegal(yDif) &&
+      isXJumpDifLegal(xDif)
     ) {
       return true;
     }
     return false;
   }
+
   // ausgelagerter Check für useEffect abhängig von currentMove
   function highlightPossibleMoves(startIndex, playerWhiteTurn, rows) {
-    if(playerWhiteTurn) {
+    if (playerWhiteTurn) {
       if (isTileIndexInBounds(startIndex[0] + 1, startIndex[1] + 1) && !rows[startIndex[0] + 1][startIndex[1] + 1].hasPiece) {
         rows[startIndex[0] + 1][
           startIndex[1] + 1
         ].isHighlighted = true;
       }
-      else if(isTileIndexInBounds(startIndex[0] + 2, startIndex[1] + 2) && !rows[startIndex[0] + 2][startIndex[1] + 2].hasPiece) {
+      else if (isTileIndexInBounds(startIndex[0] + 2, startIndex[1] + 2) && !rows[startIndex[0] + 2][startIndex[1] + 2].hasPiece) {
         rows[startIndex[0] + 2][
           startIndex[1] + 2
         ].isHighlighted = true;
@@ -390,19 +430,19 @@ export default function useBoard() {
           startIndex[1] - 1
         ].isHighlighted = true;
       }
-      else if(isTileIndexInBounds(startIndex[0] + 2, startIndex[1] - 2) && !rows[startIndex[0] + 2][startIndex[1] - 2].hasPiece) {
+      else if (isTileIndexInBounds(startIndex[0] + 2, startIndex[1] - 2) && !rows[startIndex[0] + 2][startIndex[1] - 2].hasPiece) {
         rows[startIndex[0] + 2][
           startIndex[1] - 2
         ].isHighlighted = true;
       }
     }
-    if(!playerWhiteTurn) {
+    if (!playerWhiteTurn) {
       if (isTileIndexInBounds(startIndex[0] - 1, startIndex[1] + 1) && !rows[startIndex[0] - 1][startIndex[1] + 1].hasPiece) {
         rows[startIndex[0] - 1][
           startIndex[1] + 1
         ].isHighlighted = true;
       }
-      else if(isTileIndexInBounds(startIndex[0] - 2, startIndex[1] + 2) && !rows[startIndex[0] - 2][startIndex[1] + 2].hasPiece) {
+      else if (isTileIndexInBounds(startIndex[0] - 2, startIndex[1] + 2) && !rows[startIndex[0] - 2][startIndex[1] + 2].hasPiece) {
         rows[startIndex[0] - 2][
           startIndex[1] + 2
         ].isHighlighted = true;
@@ -412,7 +452,7 @@ export default function useBoard() {
           startIndex[1] - 1
         ].isHighlighted = true;
       }
-      else if(isTileIndexInBounds(startIndex[0] - 2, startIndex[1] - 2) && !rows[startIndex[0] - 2][startIndex[1] - 2].hasPiece) {
+      else if (isTileIndexInBounds(startIndex[0] - 2, startIndex[1] - 2) && !rows[startIndex[0] - 2][startIndex[1] - 2].hasPiece) {
         rows[startIndex[0] - 2][
           startIndex[1] - 2
         ].isHighlighted = true;
