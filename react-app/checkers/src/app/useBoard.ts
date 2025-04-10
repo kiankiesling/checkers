@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { calcMoves } from "./utils/calcMoves";
+import { arrayEquals } from "./utils/utils";
 
 export default function useBoard() {
   const whiteTile = {
@@ -292,19 +293,24 @@ export default function useBoard() {
 
   //TODO Tiles abwählbar machen (endindex wird auch belegt wenn er es nicht soll)
   function onTileClick(tileIndex, tileHasPiece, pieceIsWhite) {
-    if (
-      // currentMove.startIndex == null &&
-      tileHasPiece &&
-      playerWhiteTurn == pieceIsWhite
-    ) {
-      setCurrentMove({ startIndex: tileIndex, endIndex: null });
+    if (currentMove.startIndex != null && arrayEquals(currentMove.startIndex, tileIndex)) {
+      setCurrentMove({ startIndex: null, endIndex: null })
     }
     else {
-      setCurrentMove((oldCurrentMove) => {
-        const newCurrentMove = { ...oldCurrentMove };
-        newCurrentMove.endIndex = tileIndex;
-        return newCurrentMove;
-      });
+      if (
+        // currentMove.startIndex == null &&
+        tileHasPiece &&
+        playerWhiteTurn == pieceIsWhite
+      ) {
+        setCurrentMove({ startIndex: tileIndex, endIndex: null });
+      }
+      else {
+        setCurrentMove((oldCurrentMove) => {
+          const newCurrentMove = { ...oldCurrentMove };
+          newCurrentMove.endIndex = tileIndex;
+          return newCurrentMove;
+        });
+      }
     }
   }
 
