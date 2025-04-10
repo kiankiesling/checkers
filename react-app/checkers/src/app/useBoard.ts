@@ -289,6 +289,7 @@ export default function useBoard() {
   }, [currentMove]);
 
 
+
   //TODO Tiles abwählbar machen (endindex wird auch belegt wenn er es nicht soll)
   function onTileClick(tileIndex, tileHasPiece, pieceIsWhite) {
     if (
@@ -297,7 +298,6 @@ export default function useBoard() {
       playerWhiteTurn == pieceIsWhite
     ) {
       setCurrentMove({ startIndex: tileIndex, endIndex: null });
-      console.log("1, ", currentMove);
     }
     else {
       setCurrentMove((oldCurrentMove) => {
@@ -306,16 +306,11 @@ export default function useBoard() {
         return newCurrentMove;
       });
     }
-    console.log("2, ", currentMove);
   }
 
-  useEffect(() => {
-    console.log("schlaffo");
-  }, [rows]);
 
   const removePieceFromTile = useCallback(
     function (index) {
-      console.log("remove piece", index);
       setRows((oldRows) => {
         const newRows = [...oldRows];
         newRows[index[0]][index[1]].hasPiece = false;
@@ -350,7 +345,6 @@ export default function useBoard() {
       const endIndex = currentMove.endIndex;
       const pieceIsWhite = playerWhiteTurn;
       const pieceIsPawn = true;
-      // console.log(startIndex, "jojo", test);
       removePieceFromTile(startIndex);
       addPieceToTile(endIndex, pieceIsWhite, pieceIsPawn);
       setPlayerWhiteTurn(!playerWhiteTurn);
