@@ -1,8 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { calcMoves } from "./utils/calcMoves";
 import { arrayEquals } from "./utils/utils";
+import useGameLogic from "./useGameLogic";
 
 export default function useBoard() {
+  const {
+    isMoveLegal,
+    highlightPossibleMoves,
+  } = useGameLogic();
+
+
   const whiteTile = {
     isWhite: true,
     hasPiece: false,
@@ -279,7 +286,7 @@ export default function useBoard() {
       if (
         currentMove.endIndex != null &&
         currentMove.startIndex != null &&
-        isMoveLegal()
+        isMoveLegal(rows, currentMove.startIndex, currentMove.endIndex, playerWhiteTurn)
       ) {
         makeMove();
       }
@@ -359,141 +366,125 @@ export default function useBoard() {
     [currentMove, playerWhiteTurn, removePieceFromTile, addPieceToTile]
   );
 
-  function isMoveLegal() {
-    const startIndex = currentMove.startIndex;
-    const endIndex = currentMove.endIndex;
-    const yDif = endIndex[0] - startIndex[0];
-    const xDif = endIndex[1] - startIndex[1];
+  // function isMoveLegal() {
+  //   const startIndex = currentMove.startIndex;
+  //   const endIndex = currentMove.endIndex;
+  //   const yDif = endIndex[0] - startIndex[0];
+  //   const xDif = endIndex[1] - startIndex[1];
 
 
-    //standard move
+  //   //standard move
 
-    if (
-      rows[startIndex[0]][startIndex[1]].hasPiece &&
-      !rows[endIndex[0]][endIndex[1]].hasPiece &&
-      isYDifLegal(yDif) &&
-      isXDifLegal(xDif)) {
-      return true;
-    }
+  //   if (
+  //     rows[startIndex[0]][startIndex[1]].hasPiece &&
+  //     !rows[endIndex[0]][endIndex[1]].hasPiece &&
+  //     isYDifLegal(yDif) &&
+  //     isXDifLegal(xDif)) {
+  //     return true;
+  //   }
 
-    //jump move weiß
-    else if (playerWhiteTurn && rows[startIndex[0]][startIndex[1]].hasPiece &&
-      !rows[endIndex[0]][endIndex[1]].hasPiece && isYJumpDifLegal(yDif) && isXJumpDifLegal(xDif)) {
-      if (xDif == 2 && rows[startIndex[0] + 1][startIndex[1] + 1].hasPiece && !rows[startIndex[0] + 1][startIndex[1] + 1].piece.isWhite)
-        return true
-      if (xDif == -2 && rows[startIndex[0] + 1][startIndex[1] - 1].hasPiece && !rows[startIndex[0] + 1][startIndex[1] - 1].piece.isWhite) {
-        return true
-      }
-    }
-    //jump move schwarz
-    else if (!playerWhiteTurn && rows[startIndex[0]][startIndex[1]].hasPiece &&
-      !rows[endIndex[0]][endIndex[1]].hasPiece && isYJumpDifLegal(yDif) && isXJumpDifLegal(xDif)) {
-      if (xDif == 2 && rows[startIndex[0] - 1][startIndex[1] + 1].hasPiece && rows[startIndex[0] - 1][startIndex[1] + 1].piece.isWhite)
-        return true
-      if (xDif == -2 && rows[startIndex[0] - 1][startIndex[1] - 1].hasPiece && rows[startIndex[0] - 1][startIndex[1] - 1].piece.isWhite) {
-        return true
-      }
-    }
+  //   //jump move weiß
+  //   else if (playerWhiteTurn && rows[startIndex[0]][startIndex[1]].hasPiece &&
+  //     !rows[endIndex[0]][endIndex[1]].hasPiece && isYJumpDifLegal(yDif) && isXJumpDifLegal(xDif)) {
+  //     if (xDif == 2 && rows[startIndex[0] + 1][startIndex[1] + 1].hasPiece && !rows[startIndex[0] + 1][startIndex[1] + 1].piece.isWhite)
+  //       return true
+  //     if (xDif == -2 && rows[startIndex[0] + 1][startIndex[1] - 1].hasPiece && !rows[startIndex[0] + 1][startIndex[1] - 1].piece.isWhite) {
+  //       return true
+  //     }
+  //   }
+  //   //jump move schwarz
+  //   else if (!playerWhiteTurn && rows[startIndex[0]][startIndex[1]].hasPiece &&
+  //     !rows[endIndex[0]][endIndex[1]].hasPiece && isYJumpDifLegal(yDif) && isXJumpDifLegal(xDif)) {
+  //     if (xDif == 2 && rows[startIndex[0] - 1][startIndex[1] + 1].hasPiece && rows[startIndex[0] - 1][startIndex[1] + 1].piece.isWhite)
+  //       return true
+  //     if (xDif == -2 && rows[startIndex[0] - 1][startIndex[1] - 1].hasPiece && rows[startIndex[0] - 1][startIndex[1] - 1].piece.isWhite) {
+  //       return true
+  //     }
+  //   }
 
-    return false;
-  }
+  //   return false;
+  // }
 
-  function isJumpMoveLegal() {
-    const startIndex = currentMove.startIndex;
-    const endIndex = currentMove.endIndex;
-    const yDif = endIndex[0] - startIndex[0];
-    const xDif = endIndex[1] - startIndex[1];
-
-    if (
-      rows[startIndex[0]][startIndex[1]].hasPiece &&
-      !rows[endIndex[0]][endIndex[1]].hasPiece &&
-      isYJumpDifLegal(yDif) &&
-      isXJumpDifLegal(xDif)
-    ) {
-      return true;
-    }
-    return false;
-  }
 
   // ausgelagerter Check für useEffect abhängig von currentMove
-  function highlightPossibleMoves(startIndex, playerWhiteTurn, rows) {
-    if (playerWhiteTurn) {
-      if (isTileIndexInBounds(startIndex[0] + 1, startIndex[1] + 1) && !rows[startIndex[0] + 1][startIndex[1] + 1].hasPiece) {
-        rows[startIndex[0] + 1][
-          startIndex[1] + 1
-        ].isHighlighted = true;
-      }
-      else if (isTileIndexInBounds(startIndex[0] + 2, startIndex[1] + 2) && !rows[startIndex[0] + 2][startIndex[1] + 2].hasPiece) {
-        rows[startIndex[0] + 2][
-          startIndex[1] + 2
-        ].isHighlighted = true;
-      }
-      if (isTileIndexInBounds(startIndex[0] + 1, startIndex[1] - 1) && !rows[startIndex[0] + 1][startIndex[1] - 1].hasPiece) {
-        rows[startIndex[0] + 1][
-          startIndex[1] - 1
-        ].isHighlighted = true;
-      }
-      else if (isTileIndexInBounds(startIndex[0] + 2, startIndex[1] - 2) && !rows[startIndex[0] + 2][startIndex[1] - 2].hasPiece) {
-        rows[startIndex[0] + 2][
-          startIndex[1] - 2
-        ].isHighlighted = true;
-      }
-    }
-    if (!playerWhiteTurn) {
-      if (isTileIndexInBounds(startIndex[0] - 1, startIndex[1] + 1) && !rows[startIndex[0] - 1][startIndex[1] + 1].hasPiece) {
-        rows[startIndex[0] - 1][
-          startIndex[1] + 1
-        ].isHighlighted = true;
-      }
-      else if (isTileIndexInBounds(startIndex[0] - 2, startIndex[1] + 2) && !rows[startIndex[0] - 2][startIndex[1] + 2].hasPiece) {
-        rows[startIndex[0] - 2][
-          startIndex[1] + 2
-        ].isHighlighted = true;
-      }
-      if (isTileIndexInBounds(startIndex[0] - 1, startIndex[1] - 1) && !rows[startIndex[0] - 1][startIndex[1] - 1].hasPiece) {
-        rows[startIndex[0] - 1][
-          startIndex[1] - 1
-        ].isHighlighted = true;
-      }
-      else if (isTileIndexInBounds(startIndex[0] - 2, startIndex[1] - 2) && !rows[startIndex[0] - 2][startIndex[1] - 2].hasPiece) {
-        rows[startIndex[0] - 2][
-          startIndex[1] - 2
-        ].isHighlighted = true;
-      }
-    }
+  // function highlightPossibleMoves(startIndex, playerWhiteTurn, rows) {
+  //   if (playerWhiteTurn) {
+  //     if (isTileIndexInBounds(startIndex[0] + 1, startIndex[1] + 1) && !rows[startIndex[0] + 1][startIndex[1] + 1].hasPiece) {
+  //       rows[startIndex[0] + 1][
+  //         startIndex[1] + 1
+  //       ].isHighlighted = true;
+  //     }
+  //     else if (isTileIndexInBounds(startIndex[0] + 2, startIndex[1] + 2) && !rows[startIndex[0] + 2][startIndex[1] + 2].hasPiece) {
+  //       rows[startIndex[0] + 2][
+  //         startIndex[1] + 2
+  //       ].isHighlighted = true;
+  //     }
+  //     if (isTileIndexInBounds(startIndex[0] + 1, startIndex[1] - 1) && !rows[startIndex[0] + 1][startIndex[1] - 1].hasPiece) {
+  //       rows[startIndex[0] + 1][
+  //         startIndex[1] - 1
+  //       ].isHighlighted = true;
+  //     }
+  //     else if (isTileIndexInBounds(startIndex[0] + 2, startIndex[1] - 2) && !rows[startIndex[0] + 2][startIndex[1] - 2].hasPiece) {
+  //       rows[startIndex[0] + 2][
+  //         startIndex[1] - 2
+  //       ].isHighlighted = true;
+  //     }
+  //   }
+  //   if (!playerWhiteTurn) {
+  //     if (isTileIndexInBounds(startIndex[0] - 1, startIndex[1] + 1) && !rows[startIndex[0] - 1][startIndex[1] + 1].hasPiece) {
+  //       rows[startIndex[0] - 1][
+  //         startIndex[1] + 1
+  //       ].isHighlighted = true;
+  //     }
+  //     else if (isTileIndexInBounds(startIndex[0] - 2, startIndex[1] + 2) && !rows[startIndex[0] - 2][startIndex[1] + 2].hasPiece) {
+  //       rows[startIndex[0] - 2][
+  //         startIndex[1] + 2
+  //       ].isHighlighted = true;
+  //     }
+  //     if (isTileIndexInBounds(startIndex[0] - 1, startIndex[1] - 1) && !rows[startIndex[0] - 1][startIndex[1] - 1].hasPiece) {
+  //       rows[startIndex[0] - 1][
+  //         startIndex[1] - 1
+  //       ].isHighlighted = true;
+  //     }
+  //     else if (isTileIndexInBounds(startIndex[0] - 2, startIndex[1] - 2) && !rows[startIndex[0] - 2][startIndex[1] - 2].hasPiece) {
+  //       rows[startIndex[0] - 2][
+  //         startIndex[1] - 2
+  //       ].isHighlighted = true;
+  //     }
+  //   }
 
-  }
+  // }
 
-  function isTileIndexInBounds(rowIndex, tileIndex) {
-    return (rowIndex < 8 && tileIndex < 8 && rowIndex >= 0 && tileIndex >= 0);
-  }
+  // function isTileIndexInBounds(rowIndex, tileIndex) {
+  //   return (rowIndex < 8 && tileIndex < 8 && rowIndex >= 0 && tileIndex >= 0);
+  // }
 
-  function isYDifLegal(yDif) {
-    if (playerWhiteTurn && yDif == 1) {
-      return true;
-    }
-    if (!playerWhiteTurn && yDif == -1) {
-      return true;
-    }
-  }
-  function isYJumpDifLegal(yDif) {
-    if (playerWhiteTurn && yDif == 2) {
-      return true;
-    }
-    if (!playerWhiteTurn && yDif == -2) {
-      return true;
-    }
-  }
-  function isXDifLegal(xDif) {
-    if (xDif == 1 || xDif == -1) {
-      return true;
-    }
-  }
-  function isXJumpDifLegal(xDif) {
-    if (xDif == 2 || xDif == -2) {
-      return true;
-    }
-  }
+  // function isYDifLegal(yDif) {
+  //   if (playerWhiteTurn && yDif == 1) {
+  //     return true;
+  //   }
+  //   if (!playerWhiteTurn && yDif == -1) {
+  //     return true;
+  //   }
+  // }
+  // function isYJumpDifLegal(yDif) {
+  //   if (playerWhiteTurn && yDif == 2) {
+  //     return true;
+  //   }
+  //   if (!playerWhiteTurn && yDif == -2) {
+  //     return true;
+  //   }
+  // }
+  // function isXDifLegal(xDif) {
+  //   if (xDif == 1 || xDif == -1) {
+  //     return true;
+  //   }
+  // }
+  // function isXJumpDifLegal(xDif) {
+  //   if (xDif == 2 || xDif == -2) {
+  //     return true;
+  //   }
+  // }
 
   return {
     rows,
