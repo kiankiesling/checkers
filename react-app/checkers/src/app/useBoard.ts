@@ -231,12 +231,14 @@ export default function useBoard() {
 
   const [playerWhiteTurn, setPlayerWhiteTurn] = useState(true);
   const [whiteStonesRemoved, setWhiteStonesRemoved] = useState(2);
-  const [blackStonesRemoved, setBlackStonesRemoved] = useState(10);
+  const [blackStonesRemoved, setBlackStonesRemoved] = useState(3);
   const [currentMove, setCurrentMove] = useState({
     startIndex: null,
     endIndex: null,
   });
 
+
+  //TODO Bug der 2x Make Move laufen lässt, UseEffect durch funktion ersetzen, die bei update von current move aufgerufen wird.
   useEffect(() => {
     setRows((rows) => {
       const newRows = [...rows];
@@ -262,7 +264,7 @@ export default function useBoard() {
 
         highlightPossibleMoves(currentMove.startIndex, false, newRows)
       }
-
+      debugger
       if (
         currentMove.endIndex != null &&
         currentMove.startIndex != null &&
@@ -351,7 +353,12 @@ export default function useBoard() {
       removePieceFromTile(startIndex);
       addPieceToTile(endIndex, pieceIsWhite, pieceIsPawn);
       if (pieceIsWhite && startIndex[1] - endIndex[1] == -2) {
+        debugger
         removePieceFromTile([startIndex[0] + 1, startIndex[1] + 1])
+        setBlackStonesRemoved((oldBlackStonesRemoved) => {
+          const newBlackStonesRemoved = oldBlackStonesRemoved + 1;
+          return newBlackStonesRemoved;
+        })
       }
       if (pieceIsWhite && startIndex[1] - endIndex[1] == 2) {
         removePieceFromTile([startIndex[0] + 1, startIndex[1] - 1])
@@ -367,7 +374,6 @@ export default function useBoard() {
     },
     [currentMove, playerWhiteTurn, removePieceFromTile, addPieceToTile]
   )
-
 
   return {
     rows,
