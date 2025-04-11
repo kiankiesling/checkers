@@ -3,8 +3,6 @@
 export default function useGameLogic() {
 
     function isMoveLegal(rows, startIndex, endIndex, playerWhiteTurn) {
-        // const startIndex = currentMove.startIndex;
-        // const endIndex = currentMove.endIndex;
         const yDif = endIndex[0] - startIndex[0];
         const xDif = endIndex[1] - startIndex[1];
 
@@ -42,13 +40,16 @@ export default function useGameLogic() {
     }
 
     function highlightPossibleMoves(startIndex, playerWhiteTurn, rows) {
+        //weiß
+        let linksObenWeiß = rows[startIndex[0] + 1][startIndex[1] - 1].piece.isWhi
         if (playerWhiteTurn) {
             if (isTileIndexInBounds(startIndex[0] + 1, startIndex[1] + 1) && !rows[startIndex[0] + 1][startIndex[1] + 1].hasPiece) {
                 rows[startIndex[0] + 1][
                     startIndex[1] + 1
                 ].isHighlighted = true;
             }
-            else if (isTileIndexInBounds(startIndex[0] + 2, startIndex[1] + 2) && !rows[startIndex[0] + 2][startIndex[1] + 2].hasPiece) {
+            else if (isTileIndexInBounds(startIndex[0] + 2, startIndex[1] + 2) && !rows[startIndex[0] + 2][startIndex[1] + 2].hasPiece &&
+                !rows[startIndex[0] + 1][startIndex[1] + 1].piece.isWhite) {
                 rows[startIndex[0] + 2][
                     startIndex[1] + 2
                 ].isHighlighted = true;
@@ -58,19 +59,22 @@ export default function useGameLogic() {
                     startIndex[1] - 1
                 ].isHighlighted = true;
             }
-            else if (isTileIndexInBounds(startIndex[0] + 2, startIndex[1] - 2) && !rows[startIndex[0] + 2][startIndex[1] - 2].hasPiece) {
+            else if (isTileIndexInBounds(startIndex[0] + 2, startIndex[1] - 2) && !rows[startIndex[0] + 2][startIndex[1] - 2].hasPiece &&
+                !rows[startIndex[0] + 1][startIndex[1] - 1].piece.isWhite) {
                 rows[startIndex[0] + 2][
                     startIndex[1] - 2
                 ].isHighlighted = true;
             }
         }
+        //schwarz
         if (!playerWhiteTurn) {
             if (isTileIndexInBounds(startIndex[0] - 1, startIndex[1] + 1) && !rows[startIndex[0] - 1][startIndex[1] + 1].hasPiece) {
                 rows[startIndex[0] - 1][
                     startIndex[1] + 1
                 ].isHighlighted = true;
             }
-            else if (isTileIndexInBounds(startIndex[0] - 2, startIndex[1] + 2) && !rows[startIndex[0] - 2][startIndex[1] + 2].hasPiece) {
+            else if (isTileIndexInBounds(startIndex[0] - 2, startIndex[1] + 2) && !rows[startIndex[0] - 2][startIndex[1] + 2].hasPiece &&
+                rows[startIndex[0] - 1][startIndex[1] + 1].piece.isWhite) {
                 rows[startIndex[0] - 2][
                     startIndex[1] + 2
                 ].isHighlighted = true;
@@ -80,7 +84,8 @@ export default function useGameLogic() {
                     startIndex[1] - 1
                 ].isHighlighted = true;
             }
-            else if (isTileIndexInBounds(startIndex[0] - 2, startIndex[1] - 2) && !rows[startIndex[0] - 2][startIndex[1] - 2].hasPiece) {
+            else if (isTileIndexInBounds(startIndex[0] - 2, startIndex[1] - 2) && !rows[startIndex[0] - 2][startIndex[1] - 2].hasPiece &&
+                rows[startIndex[0] - 1][startIndex[1] - 1].piece.isWhite) {
                 rows[startIndex[0] - 2][
                     startIndex[1] - 2
                 ].isHighlighted = true;

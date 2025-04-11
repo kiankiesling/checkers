@@ -3,6 +3,7 @@ import { calcMoves } from "./utils/calcMoves";
 import { arrayEquals } from "./utils/utils";
 import useGameLogic from "./useGameLogic";
 
+
 export default function useBoard() {
   const {
     isMoveLegal,
@@ -15,6 +16,7 @@ export default function useBoard() {
     hasPiece: false,
     piece: { isWhite: null, isPawn: null },
   };
+
   const [rows, setRows] = useState([
     [
       {
