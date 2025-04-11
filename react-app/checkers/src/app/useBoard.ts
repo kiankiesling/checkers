@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { calcMoves } from "./utils/calcMoves";
 import { arrayEquals } from "./utils/utils";
 import useGameLogic from "./useGameLogic";
+import { start } from "repl";
 
 
 export default function useBoard() {
@@ -253,18 +254,6 @@ export default function useBoard() {
         ].isSelected = true;
 
         highlightPossibleMoves(currentMove.startIndex, true, newRows)
-
-        //TODO abhängig von anderen pieces machen
-        // if (isTileIndexInBounds(currentMove.startIndex[0] + 1, currentMove.startIndex[1] + 1)) {
-        //   newRows[currentMove.startIndex[0] + 1][
-        //     currentMove.startIndex[1] + 1
-        //   ].isHighlighted = true;
-        // }
-        // if (isTileIndexInBounds(currentMove.startIndex[0] + 1, currentMove.startIndex[1] - 1)) {
-        //   newRows[currentMove.startIndex[0] + 1][
-        //     currentMove.startIndex[1] - 1
-        //   ].isHighlighted = true;
-        // }
       }
       if (currentMove.startIndex != null && !playerWhiteTurn) {
         newRows[currentMove.startIndex[0]][
@@ -272,17 +261,6 @@ export default function useBoard() {
         ].isSelected = true;
 
         highlightPossibleMoves(currentMove.startIndex, false, newRows)
-
-        // if (isTileIndexInBounds(currentMove.startIndex[0] - 1, currentMove.startIndex[1] + 1)) {
-        //   newRows[currentMove.startIndex[0] - 1][
-        //     currentMove.startIndex[1] + 1
-        //   ].isHighlighted = true;
-        // }
-        // if (isTileIndexInBounds(currentMove.startIndex[0] - 1, currentMove.startIndex[1] - 1)) {
-        //   newRows[currentMove.startIndex[0] - 1][
-        //     currentMove.startIndex[1] - 1
-        //   ].isHighlighted = true;
-        // }
       }
 
       if (
@@ -299,8 +277,6 @@ export default function useBoard() {
   }, [currentMove]);
 
 
-
-  //TODO Tiles abwählbar machen (endindex wird auch belegt wenn er es nicht soll)
   function onTileClick(tileIndex, tileHasPiece, pieceIsWhite) {
     if (currentMove.startIndex != null && arrayEquals(currentMove.startIndex, tileIndex)) {
       setCurrentMove({ startIndex: null, endIndex: null })
@@ -349,10 +325,22 @@ export default function useBoard() {
     },
     []
   );
-  // function addPieceToTile(index, isWhite, isPawn) {
-  //   rows[index[0]][index[1]].piece.isWhite = isWhite;
-  //   rows[index[0]][index[1]].piece.isPawn = isPawn;
-  // }
+
+  // alte variante ohne Jump Moves
+
+  // const makeMove = useCallback(
+  //   function () {
+  //     const startIndex = currentMove.startIndex;
+  //     const endIndex = currentMove.endIndex;
+  //     const pieceIsWhite = playerWhiteTurn;
+  //     const pieceIsPawn = true;
+  //     removePieceFromTile(startIndex);
+  //     addPieceToTile(endIndex, pieceIsWhite, pieceIsPawn);
+  //     setPlayerWhiteTurn(!playerWhiteTurn);
+  //     setCurrentMove({ startIndex: null, endIndex: null });
+  //   },
+  //   [currentMove, playerWhiteTurn, removePieceFromTile, addPieceToTile]
+  // );
 
   const makeMove = useCallback(
     function () {
@@ -362,131 +350,24 @@ export default function useBoard() {
       const pieceIsPawn = true;
       removePieceFromTile(startIndex);
       addPieceToTile(endIndex, pieceIsWhite, pieceIsPawn);
+      if (pieceIsWhite && startIndex[1] - endIndex[1] == -2) {
+        removePieceFromTile([startIndex[0] + 1, startIndex[1] + 1])
+      }
+      if (pieceIsWhite && startIndex[1] - endIndex[1] == 2) {
+        removePieceFromTile([startIndex[0] + 1, startIndex[1] - 1])
+      }
+      if (!pieceIsWhite && startIndex[1] - endIndex[1] == -2) {
+        removePieceFromTile([startIndex[0] - 1, startIndex[1] + 1])
+      }
+      if (!pieceIsWhite && startIndex[1] - endIndex[1] == 2) {
+        removePieceFromTile([startIndex[0] - 1, startIndex[1] - 1])
+      }
       setPlayerWhiteTurn(!playerWhiteTurn);
       setCurrentMove({ startIndex: null, endIndex: null });
     },
     [currentMove, playerWhiteTurn, removePieceFromTile, addPieceToTile]
-  );
+  )
 
-  // function isMoveLegal() {
-  //   const startIndex = currentMove.startIndex;
-  //   const endIndex = currentMove.endIndex;
-  //   const yDif = endIndex[0] - startIndex[0];
-  //   const xDif = endIndex[1] - startIndex[1];
-
-
-  //   //standard move
-
-  //   if (
-  //     rows[startIndex[0]][startIndex[1]].hasPiece &&
-  //     !rows[endIndex[0]][endIndex[1]].hasPiece &&
-  //     isYDifLegal(yDif) &&
-  //     isXDifLegal(xDif)) {
-  //     return true;
-  //   }
-
-  //   //jump move weiß
-  //   else if (playerWhiteTurn && rows[startIndex[0]][startIndex[1]].hasPiece &&
-  //     !rows[endIndex[0]][endIndex[1]].hasPiece && isYJumpDifLegal(yDif) && isXJumpDifLegal(xDif)) {
-  //     if (xDif == 2 && rows[startIndex[0] + 1][startIndex[1] + 1].hasPiece && !rows[startIndex[0] + 1][startIndex[1] + 1].piece.isWhite)
-  //       return true
-  //     if (xDif == -2 && rows[startIndex[0] + 1][startIndex[1] - 1].hasPiece && !rows[startIndex[0] + 1][startIndex[1] - 1].piece.isWhite) {
-  //       return true
-  //     }
-  //   }
-  //   //jump move schwarz
-  //   else if (!playerWhiteTurn && rows[startIndex[0]][startIndex[1]].hasPiece &&
-  //     !rows[endIndex[0]][endIndex[1]].hasPiece && isYJumpDifLegal(yDif) && isXJumpDifLegal(xDif)) {
-  //     if (xDif == 2 && rows[startIndex[0] - 1][startIndex[1] + 1].hasPiece && rows[startIndex[0] - 1][startIndex[1] + 1].piece.isWhite)
-  //       return true
-  //     if (xDif == -2 && rows[startIndex[0] - 1][startIndex[1] - 1].hasPiece && rows[startIndex[0] - 1][startIndex[1] - 1].piece.isWhite) {
-  //       return true
-  //     }
-  //   }
-
-  //   return false;
-  // }
-
-
-  // ausgelagerter Check für useEffect abhängig von currentMove
-  // function highlightPossibleMoves(startIndex, playerWhiteTurn, rows) {
-  //   if (playerWhiteTurn) {
-  //     if (isTileIndexInBounds(startIndex[0] + 1, startIndex[1] + 1) && !rows[startIndex[0] + 1][startIndex[1] + 1].hasPiece) {
-  //       rows[startIndex[0] + 1][
-  //         startIndex[1] + 1
-  //       ].isHighlighted = true;
-  //     }
-  //     else if (isTileIndexInBounds(startIndex[0] + 2, startIndex[1] + 2) && !rows[startIndex[0] + 2][startIndex[1] + 2].hasPiece) {
-  //       rows[startIndex[0] + 2][
-  //         startIndex[1] + 2
-  //       ].isHighlighted = true;
-  //     }
-  //     if (isTileIndexInBounds(startIndex[0] + 1, startIndex[1] - 1) && !rows[startIndex[0] + 1][startIndex[1] - 1].hasPiece) {
-  //       rows[startIndex[0] + 1][
-  //         startIndex[1] - 1
-  //       ].isHighlighted = true;
-  //     }
-  //     else if (isTileIndexInBounds(startIndex[0] + 2, startIndex[1] - 2) && !rows[startIndex[0] + 2][startIndex[1] - 2].hasPiece) {
-  //       rows[startIndex[0] + 2][
-  //         startIndex[1] - 2
-  //       ].isHighlighted = true;
-  //     }
-  //   }
-  //   if (!playerWhiteTurn) {
-  //     if (isTileIndexInBounds(startIndex[0] - 1, startIndex[1] + 1) && !rows[startIndex[0] - 1][startIndex[1] + 1].hasPiece) {
-  //       rows[startIndex[0] - 1][
-  //         startIndex[1] + 1
-  //       ].isHighlighted = true;
-  //     }
-  //     else if (isTileIndexInBounds(startIndex[0] - 2, startIndex[1] + 2) && !rows[startIndex[0] - 2][startIndex[1] + 2].hasPiece) {
-  //       rows[startIndex[0] - 2][
-  //         startIndex[1] + 2
-  //       ].isHighlighted = true;
-  //     }
-  //     if (isTileIndexInBounds(startIndex[0] - 1, startIndex[1] - 1) && !rows[startIndex[0] - 1][startIndex[1] - 1].hasPiece) {
-  //       rows[startIndex[0] - 1][
-  //         startIndex[1] - 1
-  //       ].isHighlighted = true;
-  //     }
-  //     else if (isTileIndexInBounds(startIndex[0] - 2, startIndex[1] - 2) && !rows[startIndex[0] - 2][startIndex[1] - 2].hasPiece) {
-  //       rows[startIndex[0] - 2][
-  //         startIndex[1] - 2
-  //       ].isHighlighted = true;
-  //     }
-  //   }
-
-  // }
-
-  // function isTileIndexInBounds(rowIndex, tileIndex) {
-  //   return (rowIndex < 8 && tileIndex < 8 && rowIndex >= 0 && tileIndex >= 0);
-  // }
-
-  // function isYDifLegal(yDif) {
-  //   if (playerWhiteTurn && yDif == 1) {
-  //     return true;
-  //   }
-  //   if (!playerWhiteTurn && yDif == -1) {
-  //     return true;
-  //   }
-  // }
-  // function isYJumpDifLegal(yDif) {
-  //   if (playerWhiteTurn && yDif == 2) {
-  //     return true;
-  //   }
-  //   if (!playerWhiteTurn && yDif == -2) {
-  //     return true;
-  //   }
-  // }
-  // function isXDifLegal(xDif) {
-  //   if (xDif == 1 || xDif == -1) {
-  //     return true;
-  //   }
-  // }
-  // function isXJumpDifLegal(xDif) {
-  //   if (xDif == 2 || xDif == -2) {
-  //     return true;
-  //   }
-  // }
 
   return {
     rows,
