@@ -9,12 +9,11 @@ import SearchBar from "./searchBar";
 import { useCallback, useEffect } from "react";
 
 export default function Home() {
-  let {
+  const {
     rows,
     setRows,
     removePieceFromTile,
     addPieceToTile,
-    makeMove,
     onTileClick,
     // initializeBoard,
     status,
