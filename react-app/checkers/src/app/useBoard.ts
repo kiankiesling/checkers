@@ -242,7 +242,6 @@ export default function useBoard() {
   // Alle statusändernden dinge auf der newRows Kopie ausführen, auch makeMove (pure function), insgesamt vllt kleinere Funktionen 
   const handleCurrentMove = useCallback(
     function ({ startIndex, endIndex }) {
-      console.log("handleCurrentMove")
       setRows((rows) => {
         const newRows = [...rows];
 
@@ -340,21 +339,6 @@ export default function useBoard() {
     []
   );
 
-  // alte variante ohne Jump Moves
-
-  // const makeMove = useCallback(
-  //   function () {
-  //     const startIndex = currentMove.startIndex;
-  //     const endIndex = currentMove.endIndex;
-  //     const pieceIsWhite = playerWhiteTurn;
-  //     const pieceIsPawn = true;
-  //     removePieceFromTile(startIndex);
-  //     addPieceToTile(endIndex, pieceIsWhite, pieceIsPawn);
-  //     setPlayerWhiteTurn(!playerWhiteTurn);
-  //     setCurrentMove({ startIndex: null, endIndex: null });
-  //   },
-  //   [currentMove, playerWhiteTurn, removePieceFromTile, addPieceToTile]
-  // );
 
   const makeMove = useCallback(
     function ({ startIndex, endIndex, rows }) {
