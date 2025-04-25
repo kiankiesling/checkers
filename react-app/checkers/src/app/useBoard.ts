@@ -308,9 +308,9 @@ export default function useBoard() {
         if (
           endIndex != null &&
           startIndex != null &&
-          isMoveLegal(rows, startIndex, endIndex, playerWhiteTurn)
+          isMoveLegal(newRows, startIndex, endIndex, playerWhiteTurn)
         ) {
-          makeMove({ startIndex, endIndex });
+          makeMove({ startIndex, endIndex, rows });
         }
 
         return newRows;
@@ -347,27 +347,21 @@ export default function useBoard() {
 
 
   const removePieceFromTile = useCallback(
-    function (index) {
-      setRows((oldRows) => {
-        const newRows = [...oldRows];
-        newRows[index[0]][index[1]].hasPiece = false;
+    function (index, rows) {
+      rows[index[0]][index[1]].hasPiece = false;
 
-        return newRows;
-      });
+      return rows;
     },
     [setRows]
   );
 
   const addPieceToTile = useCallback(
-    function (index, isWhite, isPawn) {
-      setRows(
-        (oldRows) => {
-          const newRows = [...oldRows];
-          newRows[index[0]][index[1]].hasPiece = true;
-          newRows[index[0]][index[1]].piece.isWhite = isWhite;
-          newRows[index[0]][index[1]].piece.isPawn = isPawn;
-          return newRows;
-        });
+    function (index, isWhite, isPawn, rows) {
+      rows[index[0]][index[1]].hasPiece = true;
+      rows[index[0]][index[1]].piece.isWhite = isWhite;
+      rows[index[0]][index[1]].piece.isPawn = isPawn;
+      return rows;
+
     },
     []
   );
@@ -389,16 +383,16 @@ export default function useBoard() {
   // );
 
   const makeMove = useCallback(
-    function ({ startIndex, endIndex }) {
+    function ({ startIndex, endIndex, rows }) {
       // const startIndex = currentMove.startIndex;
       // const endIndex = currentMove.endIndex;
       const pieceIsWhite = playerWhiteTurn;
       const pieceIsPawn = true;
-      removePieceFromTile(startIndex);
-      addPieceToTile(endIndex, pieceIsWhite, pieceIsPawn);
+      removePieceFromTile(startIndex, rows);
+      addPieceToTile(endIndex, pieceIsWhite, pieceIsPawn, rows);
       debugger
       if (pieceIsWhite && startIndex[1] - endIndex[1] == -2) {
-        removePieceFromTile([startIndex[0] + 1, startIndex[1] + 1])
+        removePieceFromTile([startIndex[0] + 1, startIndex[1] + 1], rows)
         setBlackStonesRemoved((oldBlackStonesRemoved) => {
           debugger
           const newBlackStonesRemoved = oldBlackStonesRemoved + 1;
@@ -406,13 +400,13 @@ export default function useBoard() {
         })
       }
       if (pieceIsWhite && startIndex[1] - endIndex[1] == 2) {
-        removePieceFromTile([startIndex[0] + 1, startIndex[1] - 1])
+        removePieceFromTile([startIndex[0] + 1, startIndex[1] - 1], rows)
       }
       if (!pieceIsWhite && startIndex[1] - endIndex[1] == -2) {
-        removePieceFromTile([startIndex[0] - 1, startIndex[1] + 1])
+        removePieceFromTile([startIndex[0] - 1, startIndex[1] + 1], rows)
       }
       if (!pieceIsWhite && startIndex[1] - endIndex[1] == 2) {
-        removePieceFromTile([startIndex[0] - 1, startIndex[1] - 1])
+        removePieceFromTile([startIndex[0] - 1, startIndex[1] - 1], rows)
       }
       setPlayerWhiteTurn(!playerWhiteTurn);
       setCurrentMove({ startIndex: null, endIndex: null });
