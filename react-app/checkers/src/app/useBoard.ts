@@ -230,8 +230,8 @@ export default function useBoard() {
   ]);
 
   const [playerWhiteTurn, setPlayerWhiteTurn] = useState(true);
-  const [whiteStonesRemoved, setWhiteStonesRemoved] = useState(2);
-  const [blackStonesRemoved, setBlackStonesRemoved] = useState(3);
+  const [whiteStonesRemoved, setWhiteStonesRemoved] = useState(0);
+  const [blackStonesRemoved, setBlackStonesRemoved] = useState(0);
   const [currentMove, setCurrentMove] = useState({
     startIndex: null,
     endIndex: null,
@@ -318,6 +318,16 @@ export default function useBoard() {
     }, [currentMove]);
 
 
+  const increaseStonesRemoved = useCallback(
+    function (playerWhiteTurn) {
+      if (playerWhiteTurn) {
+        setBlackStonesRemoved((oldBlackStonesRemoved) => { return oldBlackStonesRemoved + 1 })
+      }
+      else {
+        setWhiteStonesRemoved((oldWhiteStonesRemoved) => { return oldWhiteStonesRemoved + 1 })
+      }
+    }
+  )
 
   function onTileClick(tileIndex, tileHasPiece, pieceIsWhite) {
     if (currentMove.startIndex != null && arrayEquals(currentMove.startIndex, tileIndex)) {
@@ -354,6 +364,8 @@ export default function useBoard() {
     },
     [setRows]
   );
+
+
 
   const addPieceToTile = useCallback(
     function (index, isWhite, isPawn, rows) {
@@ -393,24 +405,23 @@ export default function useBoard() {
       debugger
       if (pieceIsWhite && startIndex[1] - endIndex[1] == -2) {
         removePieceFromTile([startIndex[0] + 1, startIndex[1] + 1], rows)
-        setBlackStonesRemoved((oldBlackStonesRemoved) => {
-          debugger
-          const newBlackStonesRemoved = oldBlackStonesRemoved + 1;
-          return newBlackStonesRemoved;
-        })
+        increaseStonesRemoved(pieceIsWhite)
       }
       if (pieceIsWhite && startIndex[1] - endIndex[1] == 2) {
         removePieceFromTile([startIndex[0] + 1, startIndex[1] - 1], rows)
+        increaseStonesRemoved(pieceIsWhite)
       }
       if (!pieceIsWhite && startIndex[1] - endIndex[1] == -2) {
         removePieceFromTile([startIndex[0] - 1, startIndex[1] + 1], rows)
+        increaseStonesRemoved(pieceIsWhite)
       }
       if (!pieceIsWhite && startIndex[1] - endIndex[1] == 2) {
         removePieceFromTile([startIndex[0] - 1, startIndex[1] - 1], rows)
+        increaseStonesRemoved(pieceIsWhite)
       }
       setPlayerWhiteTurn(!playerWhiteTurn);
       setCurrentMove({ startIndex: null, endIndex: null });
-      // handleCurrentMove({ startIndex: null, endIndex: null });
+      handleCurrentMove({ startIndex: null, endIndex: null });
     },
     [currentMove, playerWhiteTurn, removePieceFromTile, addPieceToTile, setBlackStonesRemoved]
   )
