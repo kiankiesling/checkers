@@ -238,44 +238,6 @@ export default function useBoard() {
   });
 
 
-  //TODO Bug der 2x Make Move laufen lässt, UseEffect durch funktion ersetzen, die bei update von current move aufgerufen wird.
-  // useEffect(() => {
-  //   setRows((rows) => {
-  //     const newRows = [...rows];
-
-  //     for (const rowIndex in rows) {
-  //       for (const tileIndex in rows[rowIndex]) {
-  //         newRows[rowIndex][tileIndex].isSelected = false;
-  //         newRows[rowIndex][tileIndex].isHighlighted = false;
-  //       }
-  //     }
-
-  //     if (currentMove.startIndex != null && playerWhiteTurn) {
-  //       newRows[currentMove.startIndex[0]][
-  //         currentMove.startIndex[1]
-  //       ].isSelected = true;
-
-  //       highlightPossibleMoves(currentMove.startIndex, true, newRows)
-  //     }
-  //     if (currentMove.startIndex != null && !playerWhiteTurn) {
-  //       newRows[currentMove.startIndex[0]][
-  //         currentMove.startIndex[1]
-  //       ].isSelected = true;
-
-  //       highlightPossibleMoves(currentMove.startIndex, false, newRows)
-  //     }
-  //     if (
-  //       currentMove.endIndex != null &&
-  //       currentMove.startIndex != null &&
-  //       isMoveLegal(rows, currentMove.startIndex, currentMove.endIndex, playerWhiteTurn)
-  //     ) {
-  //       makeMove();
-  //     }
-
-  //     return newRows;
-  //   });
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [currentMove]);
 
   // Alle statusändernden dinge auf der newRows Kopie ausführen, auch makeMove (pure function), insgesamt vllt kleinere Funktionen 
   const handleCurrentMove = useCallback(
@@ -402,7 +364,18 @@ export default function useBoard() {
       const pieceIsPawn = true;
       removePieceFromTile(startIndex, rows);
       addPieceToTile(endIndex, pieceIsWhite, pieceIsPawn, rows);
-      debugger
+      if (startIndex[1] - endIndex[1] == 2 || startIndex[1] - endIndex[1] == -2) {
+        makeJumpMove(startIndex, endIndex, rows, pieceIsWhite)
+      }
+      setPlayerWhiteTurn(!playerWhiteTurn);
+      setCurrentMove({ startIndex: null, endIndex: null });
+      handleCurrentMove({ startIndex: null, endIndex: null });
+    },
+    [currentMove, playerWhiteTurn, removePieceFromTile, addPieceToTile, setBlackStonesRemoved]
+  )
+
+  const makeJumpMove = useCallback(
+    function (startIndex, endIndex, rows, pieceIsWhite) {
       if (pieceIsWhite && startIndex[1] - endIndex[1] == -2) {
         removePieceFromTile([startIndex[0] + 1, startIndex[1] + 1], rows)
         increaseStonesRemoved(pieceIsWhite)
@@ -419,11 +392,7 @@ export default function useBoard() {
         removePieceFromTile([startIndex[0] - 1, startIndex[1] - 1], rows)
         increaseStonesRemoved(pieceIsWhite)
       }
-      setPlayerWhiteTurn(!playerWhiteTurn);
-      setCurrentMove({ startIndex: null, endIndex: null });
-      handleCurrentMove({ startIndex: null, endIndex: null });
-    },
-    [currentMove, playerWhiteTurn, removePieceFromTile, addPieceToTile, setBlackStonesRemoved]
+    }, []
   )
 
   return {
