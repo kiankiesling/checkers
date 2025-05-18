@@ -5,7 +5,8 @@ import useGameLogic from "./useGameLogic";
 import { start } from "repl";
 
 export default function useBoard() {
-  const { isMoveLegal, highlightPossibleMoves } = useGameLogic();
+  const { isMoveLegal, checkForJumpMoves, isTileIndexInBounds } =
+    useGameLogic();
 
   const whiteTile = {
     isWhite: true,
@@ -268,6 +269,59 @@ export default function useBoard() {
     },
     [currentMove]
   );
+
+  //TODO: checkForMoves nach checkForJumpMoves Vorbild, nur Jump Moves Highlighten
+  function highlightPossibleMoves(startIndex, playerWhiteTurn, rows) {
+    const jumpMoves = checkForJumpMoves(startIndex, playerWhiteTurn, rows);
+    if (jumpMoves.length > 0) {
+      for (let jumpMove of jumpMoves) {
+        if (arrayEquals(startIndex, jumpMove[0])) {
+          console.log("start", startIndex);
+          console.log("jump", jumpMove[0]);
+          //TODO
+          highlightTile(jumpMove[1]);
+        }
+      }
+      return;
+    }
+    console.log("jump moves", jumpMoves);
+    //weiß;
+    if (playerWhiteTurn) {
+      if (
+        isTileIndexInBounds(startIndex[0] + 1, startIndex[1] + 1) &&
+        !rows[startIndex[0] + 1][startIndex[1] + 1].hasPiece
+      ) {
+        highlightTile([startIndex[0] + 1, startIndex[1] + 1]);
+      }
+
+      if (
+        isTileIndexInBounds(startIndex[0] + 1, startIndex[1] - 1) &&
+        !rows[startIndex[0] + 1][startIndex[1] - 1].hasPiece
+      ) {
+        highlightTile([startIndex[0] + 1, startIndex[1] - 1]);
+      }
+    }
+    //schwarz
+    if (!playerWhiteTurn) {
+      if (
+        isTileIndexInBounds(startIndex[0] - 1, startIndex[1] + 1) &&
+        !rows[startIndex[0] - 1][startIndex[1] + 1].hasPiece
+      ) {
+        highlightTile([startIndex[0] - 1, startIndex[1] + 1]);
+      }
+
+      if (
+        isTileIndexInBounds(startIndex[0] - 1, startIndex[1] - 1) &&
+        !rows[startIndex[0] - 1][startIndex[1] - 1].hasPiece
+      ) {
+        highlightTile([startIndex[0] - 1, startIndex[1] - 1]);
+      }
+    }
+  }
+
+  const highlightTile = useCallback(function (index) {
+    rows[index[0]][index[1]].isHighlighted = true;
+  });
 
   const increaseStonesRemoved = useCallback(function (playerWhiteTurn) {
     if (playerWhiteTurn) {

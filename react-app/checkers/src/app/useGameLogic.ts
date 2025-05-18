@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import { arrayEquals } from "./utils/utils";
 
 export default function useGameLogic() {
   function isMoveLegal(rows, startIndex, endIndex, playerWhiteTurn) {
@@ -101,7 +102,6 @@ export default function useGameLogic() {
       rows[startIndex[0] + 1 * yAxis][startIndex[1] + 1].piece.isWhite !=
         playerWhiteTurn
     ) {
-      rows[startIndex[0] + 2 * yAxis][startIndex[1] + 2].isHighlighted = true;
       jumpMoveEndIndices.push([startIndex[0] + 2 * yAxis, startIndex[1] + 2]);
     }
     if (
@@ -111,7 +111,6 @@ export default function useGameLogic() {
       rows[startIndex[0] + 1 * yAxis][startIndex[1] - 1].piece.isWhite !=
         playerWhiteTurn
     ) {
-      rows[startIndex[0] + 2 * yAxis][startIndex[1] - 2].isHighlighted = true;
       jumpMoveEndIndices.push([startIndex[0] + 2 * yAxis, startIndex[1] - 2]);
     }
     // if (!playerWhiteTurn) {
@@ -138,66 +137,49 @@ export default function useGameLogic() {
   []);
 
   //TODO: checkForMoves nach checkForJumpMoves Vorbild, nur Jump Moves Highlighten
-  function highlightPossibleMoves(startIndex, playerWhiteTurn, rows) {
-    const jumpMoves = checkForJumpMoves(startIndex, playerWhiteTurn, rows);
-    if (jumpMoves != null) {
-    }
-    console.log("jump moves", jumpMoves);
-    //weiß
-    if (playerWhiteTurn) {
-      if (
-        isTileIndexInBounds(startIndex[0] + 1, startIndex[1] + 1) &&
-        !rows[startIndex[0] + 1][startIndex[1] + 1].hasPiece
-      ) {
-        rows[startIndex[0] + 1][startIndex[1] + 1].isHighlighted = true;
-      }
-      // else if (isTileIndexInBounds(startIndex[0] + 2, startIndex[1] + 2) && !rows[startIndex[0] + 2][startIndex[1] + 2].hasPiece &&
-      //     !rows[startIndex[0] + 1][startIndex[1] + 1].piece.isWhite) {
-      //     rows[startIndex[0] + 2][
-      //         startIndex[1] + 2
-      //     ].isHighlighted = true;
-      // }
-      if (
-        isTileIndexInBounds(startIndex[0] + 1, startIndex[1] - 1) &&
-        !rows[startIndex[0] + 1][startIndex[1] - 1].hasPiece
-      ) {
-        rows[startIndex[0] + 1][startIndex[1] - 1].isHighlighted = true;
-      }
-      // else if (isTileIndexInBounds(startIndex[0] + 2, startIndex[1] - 2) && !rows[startIndex[0] + 2][startIndex[1] - 2].hasPiece &&
-      //     !rows[startIndex[0] + 1][startIndex[1] - 1].piece.isWhite) {
-      //     rows[startIndex[0] + 2][
-      //         startIndex[1] - 2
-      //     ].isHighlighted = true;
-      // }
-    }
-    //schwarz
-    if (!playerWhiteTurn) {
-      if (
-        isTileIndexInBounds(startIndex[0] - 1, startIndex[1] + 1) &&
-        !rows[startIndex[0] - 1][startIndex[1] + 1].hasPiece
-      ) {
-        rows[startIndex[0] - 1][startIndex[1] + 1].isHighlighted = true;
-      }
-      // else if (isTileIndexInBounds(startIndex[0] - 2, startIndex[1] + 2) && !rows[startIndex[0] - 2][startIndex[1] + 2].hasPiece &&
-      //     rows[startIndex[0] - 1][startIndex[1] + 1].piece.isWhite) {
-      //     rows[startIndex[0] - 2][
-      //         startIndex[1] + 2
-      //     ].isHighlighted = true;
-      // }
-      if (
-        isTileIndexInBounds(startIndex[0] - 1, startIndex[1] - 1) &&
-        !rows[startIndex[0] - 1][startIndex[1] - 1].hasPiece
-      ) {
-        rows[startIndex[0] - 1][startIndex[1] - 1].isHighlighted = true;
-      }
-      // else if (isTileIndexInBounds(startIndex[0] - 2, startIndex[1] - 2) && !rows[startIndex[0] - 2][startIndex[1] - 2].hasPiece &&
-      //     rows[startIndex[0] - 1][startIndex[1] - 1].piece.isWhite) {
-      //     rows[startIndex[0] - 2][
-      //         startIndex[1] - 2
-      //     ].isHighlighted = true;
-      // }
-    }
-  }
+  //   function highlightPossibleMoves(startIndex, playerWhiteTurn, rows) {
+  //     const jumpMoves = checkForJumpMoves(startIndex, playerWhiteTurn, rows);
+  //     if (jumpMoves != null) {
+  //       for (let jumpMove of jumpMoves) {
+  //         if (jumpMove[0].equals(startIndex)) {
+  //           //TODO
+  //           highlightTile(jumpMove[1]);
+  //         }
+  //       }
+  //     }
+  //     //weiß
+  //     if (playerWhiteTurn) {
+  //       if (
+  //         isTileIndexInBounds(startIndex[0] + 1, startIndex[1] + 1) &&
+  //         !rows[startIndex[0] + 1][startIndex[1] + 1].hasPiece
+  //       ) {
+  //         rows[startIndex[0] + 1][startIndex[1] + 1].isHighlighted = true;
+  //       }
+
+  //       if (
+  //         isTileIndexInBounds(startIndex[0] + 1, startIndex[1] - 1) &&
+  //         !rows[startIndex[0] + 1][startIndex[1] - 1].hasPiece
+  //       ) {
+  //         rows[startIndex[0] + 1][startIndex[1] - 1].isHighlighted = true;
+  //       }
+  //     }
+  //     //schwarz
+  //     if (!playerWhiteTurn) {
+  //       if (
+  //         isTileIndexInBounds(startIndex[0] - 1, startIndex[1] + 1) &&
+  //         !rows[startIndex[0] - 1][startIndex[1] + 1].hasPiece
+  //       ) {
+  //         rows[startIndex[0] - 1][startIndex[1] + 1].isHighlighted = true;
+  //       }
+
+  //       if (
+  //         isTileIndexInBounds(startIndex[0] - 1, startIndex[1] - 1) &&
+  //         !rows[startIndex[0] - 1][startIndex[1] - 1].hasPiece
+  //       ) {
+  //         rows[startIndex[0] - 1][startIndex[1] - 1].isHighlighted = true;
+  //       }
+  //     }
+  //   }
 
   const getPlayerPieceCoords = useCallback(function (playerWhiteTurn, rows) {
     const boardCoords = [];
@@ -248,6 +230,7 @@ export default function useGameLogic() {
 
   return {
     isMoveLegal,
-    highlightPossibleMoves,
+    checkForJumpMoves,
+    isTileIndexInBounds,
   };
 }
