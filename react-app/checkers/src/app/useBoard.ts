@@ -4,13 +4,8 @@ import { arrayEquals } from "./utils/utils";
 import useGameLogic from "./useGameLogic";
 import { start } from "repl";
 
-
 export default function useBoard() {
-  const {
-    isMoveLegal,
-    highlightPossibleMoves,
-  } = useGameLogic();
-
+  const { isMoveLegal, highlightPossibleMoves } = useGameLogic();
 
   const whiteTile = {
     isWhite: true,
@@ -237,9 +232,7 @@ export default function useBoard() {
     endIndex: null,
   });
 
-
-
-  // Alle statusändernden dinge auf der newRows Kopie ausführen, auch makeMove (pure function), insgesamt vllt kleinere Funktionen 
+  // TODO DeHighlighting auslagern
   const handleCurrentMove = useCallback(
     function ({ startIndex, endIndex }) {
       setRows((rows) => {
@@ -252,19 +245,15 @@ export default function useBoard() {
           }
         }
 
-        if (startIndex != null && playerWhiteTurn) {
-          newRows[startIndex[0]][
-            startIndex[1]
-          ].isSelected = true;
+        if (startIndex != null && playerWhiteTurn && endIndex == null) {
+          newRows[startIndex[0]][startIndex[1]].isSelected = true;
 
-          highlightPossibleMoves(startIndex, true, newRows)
+          highlightPossibleMoves(startIndex, true, newRows);
         }
-        if (startIndex != null && !playerWhiteTurn) {
-          newRows[startIndex[0]][
-            startIndex[1]
-          ].isSelected = true;
+        if (startIndex != null && !playerWhiteTurn && endIndex == null) {
+          newRows[startIndex[0]][startIndex[1]].isSelected = true;
 
-          highlightPossibleMoves(startIndex, false, newRows)
+          highlightPossibleMoves(startIndex, false, newRows);
         }
         if (
           endIndex != null &&
@@ -275,27 +264,31 @@ export default function useBoard() {
         }
 
         return newRows;
-      })
-    }, [currentMove]);
+      });
+    },
+    [currentMove]
+  );
 
-
-  const increaseStonesRemoved = useCallback(
-    function (playerWhiteTurn) {
-      if (playerWhiteTurn) {
-        setBlackStonesRemoved((oldBlackStonesRemoved) => { return oldBlackStonesRemoved + 1 })
-      }
-      else {
-        setWhiteStonesRemoved((oldWhiteStonesRemoved) => { return oldWhiteStonesRemoved + 1 })
-      }
+  const increaseStonesRemoved = useCallback(function (playerWhiteTurn) {
+    if (playerWhiteTurn) {
+      setBlackStonesRemoved((oldBlackStonesRemoved) => {
+        return oldBlackStonesRemoved + 1;
+      });
+    } else {
+      setWhiteStonesRemoved((oldWhiteStonesRemoved) => {
+        return oldWhiteStonesRemoved + 1;
+      });
     }
-  )
+  });
 
   function onTileClick(tileIndex, tileHasPiece, pieceIsWhite) {
-    if (currentMove.startIndex != null && arrayEquals(currentMove.startIndex, tileIndex)) {
-      setCurrentMove({ startIndex: null, endIndex: null })
+    if (
+      currentMove.startIndex != null &&
+      arrayEquals(currentMove.startIndex, tileIndex)
+    ) {
+      setCurrentMove({ startIndex: null, endIndex: null });
       handleCurrentMove({ startIndex: null, endIndex: null });
-    }
-    else {
+    } else {
       if (
         // currentMove.startIndex == null &&
         tileHasPiece &&
@@ -303,19 +296,19 @@ export default function useBoard() {
       ) {
         setCurrentMove({ startIndex: tileIndex, endIndex: null });
         handleCurrentMove({ startIndex: tileIndex, endIndex: null });
-      }
-      else {
+      } else {
         setCurrentMove((oldCurrentMove) => {
           const newCurrentMove = { ...oldCurrentMove };
           newCurrentMove.endIndex = tileIndex;
           return newCurrentMove;
-        })
-        handleCurrentMove({ startIndex: currentMove.startIndex, endIndex: tileIndex });
-
+        });
+        handleCurrentMove({
+          startIndex: currentMove.startIndex,
+          endIndex: tileIndex,
+        });
       }
     }
   }
-
 
   const removePieceFromTile = useCallback(
     function (index, rows) {
@@ -326,19 +319,12 @@ export default function useBoard() {
     [setRows]
   );
 
-
-
-  const addPieceToTile = useCallback(
-    function (index, isWhite, isPawn, rows) {
-      rows[index[0]][index[1]].hasPiece = true;
-      rows[index[0]][index[1]].piece.isWhite = isWhite;
-      rows[index[0]][index[1]].piece.isPawn = isPawn;
-      return rows;
-
-    },
-    []
-  );
-
+  const addPieceToTile = useCallback(function (index, isWhite, isPawn, rows) {
+    rows[index[0]][index[1]].hasPiece = true;
+    rows[index[0]][index[1]].piece.isWhite = isWhite;
+    rows[index[0]][index[1]].piece.isPawn = isPawn;
+    return rows;
+  }, []);
 
   const makeMove = useCallback(
     function ({ startIndex, endIndex, rows }) {
@@ -348,36 +334,49 @@ export default function useBoard() {
       const pieceIsPawn = true;
       removePieceFromTile(startIndex, rows);
       addPieceToTile(endIndex, pieceIsWhite, pieceIsPawn, rows);
-      if (startIndex[1] - endIndex[1] == 2 || startIndex[1] - endIndex[1] == -2) {
-        makeJumpMove(startIndex, endIndex, rows, pieceIsWhite)
+      if (
+        startIndex[1] - endIndex[1] == 2 ||
+        startIndex[1] - endIndex[1] == -2
+      ) {
+        makeJumpMove(startIndex, endIndex, rows, pieceIsWhite);
       }
       setPlayerWhiteTurn(!playerWhiteTurn);
       setCurrentMove({ startIndex: null, endIndex: null });
       handleCurrentMove({ startIndex: null, endIndex: null });
     },
-    [currentMove, playerWhiteTurn, removePieceFromTile, addPieceToTile, setBlackStonesRemoved]
-  )
+    [
+      currentMove,
+      playerWhiteTurn,
+      removePieceFromTile,
+      addPieceToTile,
+      setBlackStonesRemoved,
+    ]
+  );
 
-  const makeJumpMove = useCallback(
-    function (startIndex, endIndex, rows, pieceIsWhite) {
-      if (pieceIsWhite && startIndex[1] - endIndex[1] == -2) {
-        removePieceFromTile([startIndex[0] + 1, startIndex[1] + 1], rows)
-        increaseStonesRemoved(pieceIsWhite)
-      }
-      if (pieceIsWhite && startIndex[1] - endIndex[1] == 2) {
-        removePieceFromTile([startIndex[0] + 1, startIndex[1] - 1], rows)
-        increaseStonesRemoved(pieceIsWhite)
-      }
-      if (!pieceIsWhite && startIndex[1] - endIndex[1] == -2) {
-        removePieceFromTile([startIndex[0] - 1, startIndex[1] + 1], rows)
-        increaseStonesRemoved(pieceIsWhite)
-      }
-      if (!pieceIsWhite && startIndex[1] - endIndex[1] == 2) {
-        removePieceFromTile([startIndex[0] - 1, startIndex[1] - 1], rows)
-        increaseStonesRemoved(pieceIsWhite)
-      }
-    }, []
-  )
+  const makeJumpMove = useCallback(function (
+    startIndex,
+    endIndex,
+    rows,
+    pieceIsWhite
+  ) {
+    if (pieceIsWhite && startIndex[1] - endIndex[1] == -2) {
+      removePieceFromTile([startIndex[0] + 1, startIndex[1] + 1], rows);
+      increaseStonesRemoved(pieceIsWhite);
+    }
+    if (pieceIsWhite && startIndex[1] - endIndex[1] == 2) {
+      removePieceFromTile([startIndex[0] + 1, startIndex[1] - 1], rows);
+      increaseStonesRemoved(pieceIsWhite);
+    }
+    if (!pieceIsWhite && startIndex[1] - endIndex[1] == -2) {
+      removePieceFromTile([startIndex[0] - 1, startIndex[1] + 1], rows);
+      increaseStonesRemoved(pieceIsWhite);
+    }
+    if (!pieceIsWhite && startIndex[1] - endIndex[1] == 2) {
+      removePieceFromTile([startIndex[0] - 1, startIndex[1] - 1], rows);
+      increaseStonesRemoved(pieceIsWhite);
+    }
+  },
+  []);
 
   return {
     rows,

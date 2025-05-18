@@ -1,1 +1,6 @@
-{"python.linting.pylintArgs": ["--disable=C0116"]}
+{
+    "python.linting.pylintArgs": [
+        "--disable=C0116"
+    ],
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+}
