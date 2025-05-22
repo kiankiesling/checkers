@@ -6,6 +6,19 @@ export default function useGameLogic() {
     const yDif = endIndex[0] - startIndex[0];
     const xDif = endIndex[1] - startIndex[1];
 
+    const jumpMoves = checkForJumpMoves(startIndex, playerWhiteTurn, rows);
+    if (jumpMoves.length > 0) {
+      for (let jumpMove of jumpMoves) {
+        if (
+          arrayEquals(startIndex, jumpMove[0]) &&
+          arrayEquals(endIndex, jumpMove[1])
+        ) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     //standard move
 
     if (

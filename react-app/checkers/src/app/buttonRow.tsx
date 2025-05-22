@@ -6,7 +6,7 @@ export default function ({ onSearch, onStart }) {
     <div className="flex gap-0.5">
       {/* <SearchBar onSearch={onSearch} /> */}
       {/* <BaseButton title={"Spiel Starten"} onClick={onStart}></BaseButton> */}
-      <button onClick={onSearch}>test</button>
+      {/* <button onClick={onSearch}>test</button> */}
     </div>
   );
 }

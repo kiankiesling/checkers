@@ -279,7 +279,7 @@ export default function useBoard() {
           console.log("start", startIndex);
           console.log("jump", jumpMove[0]);
           //TODO
-          highlightTile(jumpMove[1]);
+          highlightTile(jumpMove[1], rows);
         }
       }
       return;
@@ -291,14 +291,14 @@ export default function useBoard() {
         isTileIndexInBounds(startIndex[0] + 1, startIndex[1] + 1) &&
         !rows[startIndex[0] + 1][startIndex[1] + 1].hasPiece
       ) {
-        highlightTile([startIndex[0] + 1, startIndex[1] + 1]);
+        highlightTile([startIndex[0] + 1, startIndex[1] + 1], rows);
       }
 
       if (
         isTileIndexInBounds(startIndex[0] + 1, startIndex[1] - 1) &&
         !rows[startIndex[0] + 1][startIndex[1] - 1].hasPiece
       ) {
-        highlightTile([startIndex[0] + 1, startIndex[1] - 1]);
+        highlightTile([startIndex[0] + 1, startIndex[1] - 1], rows);
       }
     }
     //schwarz
@@ -307,19 +307,19 @@ export default function useBoard() {
         isTileIndexInBounds(startIndex[0] - 1, startIndex[1] + 1) &&
         !rows[startIndex[0] - 1][startIndex[1] + 1].hasPiece
       ) {
-        highlightTile([startIndex[0] - 1, startIndex[1] + 1]);
+        highlightTile([startIndex[0] - 1, startIndex[1] + 1], rows);
       }
 
       if (
         isTileIndexInBounds(startIndex[0] - 1, startIndex[1] - 1) &&
         !rows[startIndex[0] - 1][startIndex[1] - 1].hasPiece
       ) {
-        highlightTile([startIndex[0] - 1, startIndex[1] - 1]);
+        highlightTile([startIndex[0] - 1, startIndex[1] - 1], rows);
       }
     }
   }
 
-  const highlightTile = useCallback(function (index) {
+  const highlightTile = useCallback(function (index, rows) {
     rows[index[0]][index[1]].isHighlighted = true;
   });
 
