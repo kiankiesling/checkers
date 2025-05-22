@@ -126,73 +126,9 @@ export default function useGameLogic() {
     ) {
       jumpMoveEndIndices.push([startIndex[0] + 2 * yAxis, startIndex[1] - 2]);
     }
-    // if (!playerWhiteTurn) {
-    //   if (
-    //     isTileIndexInBounds(startIndex[0] - 2, startIndex[1] + 2) &&
-    //     !rows[startIndex[0] - 2][startIndex[1] + 2].hasPiece &&
-    //     rows[startIndex[0] - 1][startIndex[1] + 1].hasPiece &&
-    //     rows[startIndex[0] - 1][startIndex[1] + 1].piece.isWhite
-    //   ) {
-    //     rows[startIndex[0] - 2][startIndex[1] + 2].isHighlighted = true;
-    //     jumpMoveAvailable = true;
-    //   } else if (
-    //     isTileIndexInBounds(startIndex[0] - 2, startIndex[1] - 2) &&
-    //     !rows[startIndex[0] - 2][startIndex[1] - 2].hasPiece &&
-    //     rows[startIndex[0] - 1][startIndex[1] - 1].hasPiece &&
-    //     rows[startIndex[0] - 1][startIndex[1] - 1].piece.isWhite
-    //   ) {
-    //     rows[startIndex[0] - 2][startIndex[1] - 2].isHighlighted = true;
-    //     jumpMoveAvailable = true;
-    //   }
-    // }
     return jumpMoveEndIndices;
   },
   []);
-
-  //TODO: checkForMoves nach checkForJumpMoves Vorbild, nur Jump Moves Highlighten
-  //   function highlightPossibleMoves(startIndex, playerWhiteTurn, rows) {
-  //     const jumpMoves = checkForJumpMoves(startIndex, playerWhiteTurn, rows);
-  //     if (jumpMoves != null) {
-  //       for (let jumpMove of jumpMoves) {
-  //         if (jumpMove[0].equals(startIndex)) {
-  //           //TODO
-  //           highlightTile(jumpMove[1]);
-  //         }
-  //       }
-  //     }
-  //     //weiß
-  //     if (playerWhiteTurn) {
-  //       if (
-  //         isTileIndexInBounds(startIndex[0] + 1, startIndex[1] + 1) &&
-  //         !rows[startIndex[0] + 1][startIndex[1] + 1].hasPiece
-  //       ) {
-  //         rows[startIndex[0] + 1][startIndex[1] + 1].isHighlighted = true;
-  //       }
-
-  //       if (
-  //         isTileIndexInBounds(startIndex[0] + 1, startIndex[1] - 1) &&
-  //         !rows[startIndex[0] + 1][startIndex[1] - 1].hasPiece
-  //       ) {
-  //         rows[startIndex[0] + 1][startIndex[1] - 1].isHighlighted = true;
-  //       }
-  //     }
-  //     //schwarz
-  //     if (!playerWhiteTurn) {
-  //       if (
-  //         isTileIndexInBounds(startIndex[0] - 1, startIndex[1] + 1) &&
-  //         !rows[startIndex[0] - 1][startIndex[1] + 1].hasPiece
-  //       ) {
-  //         rows[startIndex[0] - 1][startIndex[1] + 1].isHighlighted = true;
-  //       }
-
-  //       if (
-  //         isTileIndexInBounds(startIndex[0] - 1, startIndex[1] - 1) &&
-  //         !rows[startIndex[0] - 1][startIndex[1] - 1].hasPiece
-  //       ) {
-  //         rows[startIndex[0] - 1][startIndex[1] - 1].isHighlighted = true;
-  //       }
-  //     }
-  //   }
 
   const getPlayerPieceCoords = useCallback(function (playerWhiteTurn, rows) {
     const boardCoords = [];

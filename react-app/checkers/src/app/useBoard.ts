@@ -233,6 +233,55 @@ export default function useBoard() {
     endIndex: null,
   });
 
+  const highlightPossibleQueenMoves = useCallback(function (
+    startIndex,
+    playerWhiteTurn,
+    rows
+  ) {
+    let xIndex = startIndex[1] + 1;
+    let yIndex = startIndex[0] + 1;
+    //console.log("x: ", xIndex, "y: ", yIndex);
+    while (
+      isTileIndexInBounds(yIndex, xIndex) &&
+      !rows[yIndex][xIndex].hasPiece
+    ) {
+      highlightTile([yIndex, xIndex], rows);
+      xIndex = xIndex + 1;
+      yIndex = yIndex + 1;
+    }
+    xIndex = startIndex[1] - 1;
+    yIndex = startIndex[0] - 1;
+    while (
+      isTileIndexInBounds(yIndex, xIndex) &&
+      !rows[yIndex][xIndex].hasPiece
+    ) {
+      highlightTile([yIndex, xIndex], rows);
+      xIndex = xIndex - 1;
+      yIndex = yIndex - 1;
+    }
+    xIndex = startIndex[1] + 1;
+    yIndex = startIndex[0] - 1;
+    while (
+      isTileIndexInBounds(yIndex, xIndex) &&
+      !rows[yIndex][xIndex].hasPiece
+    ) {
+      highlightTile([yIndex, xIndex], rows);
+      xIndex = xIndex + 1;
+      yIndex = yIndex - 1;
+    }
+    xIndex = startIndex[1] - 1;
+    yIndex = startIndex[0] + 1;
+    while (
+      isTileIndexInBounds(yIndex, xIndex) &&
+      !rows[yIndex][xIndex].hasPiece
+    ) {
+      highlightTile([yIndex, xIndex], rows);
+      xIndex = xIndex - 1;
+      yIndex = yIndex + 1;
+    }
+  },
+  []);
+
   // TODO DeHighlighting auslagern
   const handleCurrentMove = useCallback(
     function ({ startIndex, endIndex }) {
@@ -272,6 +321,7 @@ export default function useBoard() {
 
   //TODO: checkForMoves nach checkForJumpMoves Vorbild, nur Jump Moves Highlighten
   function highlightPossibleMoves(startIndex, playerWhiteTurn, rows) {
+    highlightPossibleQueenMoves(startIndex, playerWhiteTurn, rows);
     const jumpMoves = checkForJumpMoves(startIndex, playerWhiteTurn, rows);
     if (jumpMoves.length > 0) {
       for (let jumpMove of jumpMoves) {
@@ -382,8 +432,6 @@ export default function useBoard() {
 
   const makeMove = useCallback(
     function ({ startIndex, endIndex, rows }) {
-      // const startIndex = currentMove.startIndex;
-      // const endIndex = currentMove.endIndex;
       const pieceIsWhite = playerWhiteTurn;
       const pieceIsPawn = true;
       removePieceFromTile(startIndex, rows);
@@ -393,8 +441,9 @@ export default function useBoard() {
         startIndex[1] - endIndex[1] == -2
       ) {
         makeJumpMove(startIndex, endIndex, rows, pieceIsWhite);
+      } else {
+        setPlayerWhiteTurn(!playerWhiteTurn);
       }
-      setPlayerWhiteTurn(!playerWhiteTurn);
       setCurrentMove({ startIndex: null, endIndex: null });
       handleCurrentMove({ startIndex: null, endIndex: null });
     },
